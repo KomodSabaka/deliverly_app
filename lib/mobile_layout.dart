@@ -1,32 +1,32 @@
-import 'package:deliverly_app/models/company_model.dart';
-import 'package:deliverly_app/models/user_model.dart';
-import 'package:deliverly_app/utils/utils.dart';
+import 'package:deliverly_app/models/seller.dart';
+import 'package:deliverly_app/models/client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'common/basket/pages/basket_page.dart';
-import 'common/basket/repository/basket_state.dart';
-import 'common/settings/pages/settings_page.dart';
-import 'common/store/pages/add_product_page.dart';
-import 'common/store/pages/store_page.dart';
-import 'common/store/repositores/counter_state.dart';
-import 'common/store/repositores/seller_store_repository.dart';
-import 'common/store/repositores/user_store_repository.dart';
-import 'common/store/widgets/seller_bottom_bar.dart';
-import 'common/store/widgets/user_bottom_bar.dart';
-import 'models/product_model.dart';
-import 'utils/colors.dart';
+import 'common/utils/constants.dart';
+import 'common/utils/utils.dart';
+import 'features/basket/pages/basket_page.dart';
+import 'features/basket/repository/basket_state.dart';
+import 'features/settings/pages/settings_page.dart';
+import 'features/store/pages/add_product_page.dart';
+import 'features/store/pages/store_page.dart';
+import 'features/store/repositores/counter_state.dart';
+import 'features/store/repositores/seller_store_repository.dart';
+import 'features/store/repositores/user_store_repository.dart';
+import 'features/store/widgets/client_bottom_bar.dart';
+import 'features/store/widgets/seller_bottom_bar.dart';
+import 'generated/l10n.dart';
+import 'models/product.dart';
 
 class MobileLayout extends ConsumerStatefulWidget {
-  final bool isUserMode;
-  final CompanyModel? company;
-  final UserModel? user;
+  final bool isClientMode;
+  final Seller? seller;
+  final Client? client;
 
   const MobileLayout({
     Key? key,
-    required this.isUserMode,
-    this.company,
-    this.user,
+    required this.isClientMode,
+    this.seller,
+    this.client,
   }) : super(key: key);
 
   @override
@@ -53,28 +53,22 @@ class _StoreLayoutState extends ConsumerState<MobileLayout> {
     }
   }
 
-  void _haveCompanyData() {
-    if (widget.company == null) {
-      showSnakeBar(context, 'Введите информацию о магазине');
+  void _haveSellerData() {
+    if (widget.seller == null) {
+      showSnakeBar(context, S.of(context).enter_description_company);
     } else {
       Navigator.of(context)
           .push(createRoute(const AddProductPage(isRefactoring: false)));
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => const AddProductPage(isRefactoring: false),
-      //   ),
-      // );
     }
   }
 
   void _getProductsFromDB() {
-    if (widget.isUserMode == true && widget.user == null) {
+    if (widget.isClientMode == true && widget.client == null) {
       ref.read(basketProvider.notifier).getProductsFromDB();
     }
   }
 
-  void selectProduct(ProductModel product) {
+  void selectProduct(Product product) {
     ref.read(basketProvider.notifier).addProduct(
           context,
           product,
@@ -110,8 +104,8 @@ class _StoreLayoutState extends ConsumerState<MobileLayout> {
             setState(() => currentIndex = index);
           },
           children: [
-            StreamBuilder<List<ProductModel>>(
-              stream: widget.isUserMode
+            StreamBuilder<List<Product>>(
+              stream: widget.isClientMode
                   ? isSearching
                       ? ref
                           .watch(userRepository)
@@ -123,32 +117,32 @@ class _StoreLayoutState extends ConsumerState<MobileLayout> {
                           .searchProduct(_searchController.text)
                       : ref.watch(sellerStoreRepository).getProductsCompany(),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<ProductModel>> snapshot) {
+                  AsyncSnapshot<List<Product>> snapshot) {
                 return StorePage(
                   snapshot: snapshot,
                   searchController: _searchController,
-                  isUserMode: widget.isUserMode,
+                  isClientMode: widget.isClientMode,
                   selectProduct: selectProduct,
                 );
               },
             ),
-            widget.isUserMode
-                ? BasketPage(user: widget.user)
+            widget.isClientMode
+                ? BasketPage(client: widget.client)
                 : SellerSettingPage(
-                    isUserMode: widget.isUserMode,
-                    user: widget.user,
-                    company: widget.company,
+                    isClientMode: widget.isClientMode,
+                    client: widget.client,
+                    seller: widget.seller,
                   ),
             SellerSettingPage(
-              isUserMode: widget.isUserMode,
-              user: widget.user,
-              company: widget.company,
+              isClientMode: widget.isClientMode,
+              client: widget.client,
+              seller: widget.seller,
             ),
           ],
         ),
       ),
-      bottomNavigationBar: widget.isUserMode
-          ? UserBottomBar(
+      bottomNavigationBar: widget.isClientMode
+          ? ClientBottomBar(
               currentIndex: currentIndex,
               basketLength: ref.watch(basketProvider).length,
               setIndex: (index) => setIndex(index),
@@ -157,12 +151,12 @@ class _StoreLayoutState extends ConsumerState<MobileLayout> {
               currentIndex: currentIndex,
               setIndex: (index) => setIndex(index),
             ),
-      floatingActionButton: widget.isUserMode
+      floatingActionButton: widget.isClientMode
           ? null
           : currentIndex == 0
               ? FloatingActionButton(
                   backgroundColor: backgroundColorSelectModePage,
-                  onPressed: _haveCompanyData,
+                  onPressed: _haveSellerData,
                   child: const Icon(Icons.add),
                 )
               : null,

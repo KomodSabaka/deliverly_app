@@ -46,7 +46,6 @@ dependencies:
   image_picker: ^0.8.6
   path_provider: ^2.0.11
   uuid: ^3.0.7
-  image_downloader: ^0.31.0
   shared_preferences: ^2.0.15
   collection:
   intl: 0.17.0
@@ -111,4 +110,4 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 flutter_intl:
-  enabled: true
+  enabled: false
