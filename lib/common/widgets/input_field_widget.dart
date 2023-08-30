@@ -1,4 +1,3 @@
-import 'package:deliverly_app/common/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,16 +7,18 @@ class InputFieldWidget extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final TextInputType keyboardType;
-  final bool isPhoneField;
-  final bool isDescription;
+  final int? maxLength;
+  final int? maxLine;
+  final Function(String)? onChanged;
 
   const InputFieldWidget({
     Key? key,
     required this.hintText,
     required this.controller,
     this.keyboardType = TextInputType.text,
-    this.isPhoneField = false,
-    this.isDescription = false,
+    this.maxLength,
+    this.maxLine = 1,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -27,13 +28,9 @@ class InputFieldWidget extends StatelessWidget {
       cursorColor: secondaryTextColor,
       controller: controller,
       keyboardType: keyboardType,
-      maxLength: isPhoneField ? 16 : null,
-      maxLines: isDescription ? null : 1,
-      onChanged: (value) {
-        if (isPhoneField) {
-          phoneNumberFormat(value: value, controller: controller);
-        }
-      },
+      maxLength: maxLength,
+      maxLines: maxLine,
+      onChanged: onChanged,
       inputFormatters: [
         FilteringTextInputFormatter.singleLineFormatter,
       ],

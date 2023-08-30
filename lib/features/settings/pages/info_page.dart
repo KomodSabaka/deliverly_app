@@ -243,13 +243,17 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
                     ? InputFieldWidget(
                         hintText: S.of(context).enter_phone_number,
                         controller: _phoneOrDescriptionController,
-                        isPhoneField: true,
+                        maxLength: 16,
                         keyboardType: TextInputType.phone,
+                        onChanged: (value) => phoneNumberFormat(
+                          value: value,
+                          controller: _phoneOrDescriptionController,
+                        ),
                       )
                     : InputFieldWidget(
                         hintText: S.of(context).enter_description_company,
                         controller: _phoneOrDescriptionController,
-                        isDescription: true,
+                        maxLine: null,
                       ),
                 const SizedBox(height: 24),
                 isClientMode

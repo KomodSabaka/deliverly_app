@@ -59,7 +59,11 @@ class _RegistrationSellerPageState extends ConsumerState<LoginPage> {
               hintText: S.of(context).enter_phone_number,
               controller: _phoneController,
               keyboardType: TextInputType.number,
-              isPhoneField: true,
+              maxLength: 16,
+              onChanged: (value) => phoneNumberFormat(
+                value: value,
+                controller: _phoneController,
+              ),
             ),
             const SizedBox(height: 24),
             Row(

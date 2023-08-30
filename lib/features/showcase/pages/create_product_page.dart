@@ -171,7 +171,7 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
               InputFieldWidget(
                 hintText: S.of(context).enter_description_product,
                 controller: _descriptionController,
-                isDescription: true,
+                maxLine: null,
               ),
               const SizedBox(height: 24),
               InputFieldWidget(
