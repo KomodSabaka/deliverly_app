@@ -7,8 +7,6 @@ class Product {
   final String price;
   final String description;
   final String image;
-  final String count;
-  final String cost;
 
   const Product({
     required this.id,
@@ -17,8 +15,6 @@ class Product {
     required this.price,
     required this.description,
     required this.image,
-    required this.count,
-    required this.cost,
   });
 
   Product copyWith({
@@ -28,8 +24,6 @@ class Product {
     String? price,
     String? description,
     String? image,
-    String? count,
-    String? cost,
   }) {
     return Product(
       id: id ?? this.id,
@@ -38,8 +32,6 @@ class Product {
       price: price ?? this.price,
       description: description ?? this.description,
       image: image ?? this.image,
-      count: count ?? this.count,
-      cost: cost ?? this.cost,
     );
   }
 
@@ -51,8 +43,6 @@ class Product {
       'price': price,
       'description': description,
       'image': image,
-      'count': count,
-      'cost': cost,
     };
   }
 
@@ -64,8 +54,6 @@ class Product {
       price: map['price'] ?? '',
       description: map['description'] ?? '',
       image: map['image'] ?? '',
-      count: map['count'] ?? '',
-      cost: map['cost'] ?? '',
     );
   }
 

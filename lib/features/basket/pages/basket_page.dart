@@ -1,21 +1,19 @@
-
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
+import 'package:deliverly_app/features/basket/repository/total_price_state.dart';
+import 'package:deliverly_app/models/date_and_time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/constants.dart';
 import '../../../common/utils/utils.dart';
 import '../../../generated/l10n.dart';
-import '../../../models/product.dart';
-import '../../../models/client.dart';
 import '../repository/basket_state.dart';
 import '../widgets/basket_product_card.dart';
 
 class BasketPage extends ConsumerStatefulWidget {
-  final Client? client;
 
   const BasketPage({
     Key? key,
-    required this.client,
   }) : super(key: key);
 
   @override
@@ -23,27 +21,15 @@ class BasketPage extends ConsumerStatefulWidget {
 }
 
 class _BasketPageState extends ConsumerState<BasketPage> {
-  int cost = 0;
-
-  int getSum() {
-    int sum = 0;
-    if (ref.read(basketProvider).isEmpty) {
-      return sum;
-    } else {
-      for (var product in ref.read(basketProvider)) {
-        sum += int.parse(product.cost);
-      }
-      return sum;
-    }
-  }
+  DateAndTime? dateAndTime;
 
   void buyProducts() async {
-    if (widget.client != null) {
+    if (ref.watch(appSettingsProvider).user != null) {
       if (ref.read(basketProvider).isNotEmpty) {
-        ref.read(basketProvider.notifier).buyProducts();
-        setState(() {
-          cost = 0;
-        });
+        ref.read(basketProvider.notifier).buyProducts(
+              context: context,
+              dateAndTime: dateAndTime!,
+            );
         showSnakeBar(context, S.of(context).thank_purchase);
       }
     } else {
@@ -51,16 +37,24 @@ class _BasketPageState extends ConsumerState<BasketPage> {
     }
   }
 
-  void _deleteProductFromBasket(Product product) {
-    ref.read(basketProvider.notifier).deleteProductFromBasket(product);
-    setState(() {
-      cost = getSum();
-    });
+  void _deleteProductFromBasket({required String id}) async {
+    await ref
+        .read(basketProvider.notifier)
+        .deleteProductFromBasket(id: id)
+        .whenComplete(
+          () => _getSum(),
+        );
+  }
+
+  void _getSum() {
+    ref.read(totalPriceProvider.notifier).calculate();
   }
 
   @override
   void initState() {
-    cost = getSum();
+    Future.delayed(Duration.zero, () {
+      _getSum();
+    });
     super.initState();
   }
 
@@ -86,18 +80,18 @@ class _BasketPageState extends ConsumerState<BasketPage> {
                   var product = ref.read(basketProvider)[index];
                   return BasketProductCard(
                     product: product,
-                    key: UniqueKey(),
                     deleteProductFromBasket: _deleteProductFromBasket,
+                    key: UniqueKey(),
                   );
                 },
               ),
             ),
-      bottomNavigationBar: cost == 0
+      bottomNavigationBar: ref.watch(totalPriceProvider) == 0
           ? null
           : Container(
               height: 50,
               width: double.infinity,
-              decoration:  const BoxDecoration(
+              decoration: const BoxDecoration(
                 border: Border(
                   top: BorderSide(color: borderColor),
                 ),
@@ -105,11 +99,15 @@ class _BasketPageState extends ConsumerState<BasketPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text('${S.of(context).to_pay} $cost руб.'),
+                  Text(
+                      '${S.of(context).to_pay} ${ref.watch(totalPriceProvider)} руб.'),
                   ElevatedButton(
-                    onPressed: buyProducts,
-                    child: Text(S.of(context).pay),
-                  ),
+                    onPressed: () => buyProducts(),
+                    child: Text(
+                      S.of(context).pay,
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 ],
               ),
             ),

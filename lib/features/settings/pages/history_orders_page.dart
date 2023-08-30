@@ -1,3 +1,4 @@
+import 'package:deliverly_app/features/settings/controllers/client_settings_controller.dart';
 import 'package:deliverly_app/models/purchase_order.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/back_arrow_widget.dart';
 import '../../../generated/l10n.dart';
-import '../../store/widgets/purchase_widget.dart';
-import '../repositores/client_settings_repository.dart';
+import '../../showcase/widgets/purchase_widget.dart';
 
 class HistoryOrdersPage extends ConsumerWidget {
   const HistoryOrdersPage({
@@ -17,7 +17,7 @@ class HistoryOrdersPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        leading: const BackArrowWidget(),
+        leading:  BackArrowWidget(onPressed: () => Navigator.pop(context),),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -31,7 +31,7 @@ class HistoryOrdersPage extends ConsumerWidget {
             Expanded(
               flex: 1,
               child: FutureBuilder<List<PurchaseOrder>>(
-                future: ref.watch(clientSettingRepository).getHistory(),
+                future: ref.watch(clientSettingsController).getHistory(),
                 builder: (context, snapshot) {
                   return snapshot.connectionState == ConnectionState.waiting
                       ? const Center(

@@ -1,7 +1,12 @@
 import 'dart:io';
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
+import 'package:deliverly_app/common/enums/mode_enum.dart';
+import 'package:deliverly_app/common/navigation/routes.dart';
+import 'package:deliverly_app/features/auth/controller/auth_controller.dart';
+import 'package:deliverly_app/features/settings/controllers/client_settings_controller.dart';
+import 'package:deliverly_app/features/settings/controllers/seller_settings_controller.dart';
 import 'package:deliverly_app/models/pay_card.dart';
-import 'package:deliverly_app/models/seller.dart';
-import 'package:deliverly_app/models/client.dart';
+import 'package:deliverly_app/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/utils/constants.dart';
@@ -9,21 +14,10 @@ import '../../../common/utils/utils.dart';
 import '../../../common/widgets/back_arrow_widget.dart';
 import '../../../common/widgets/input_field_widget.dart';
 import '../../../generated/l10n.dart';
-import '../../auth/repository/auth_repository.dart';
-import '../repositores/client_settings_repository.dart';
-import '../repositores/seller_settings_repository.dart';
-import 'client_card_page.dart';
 
 class InfoPage extends ConsumerStatefulWidget {
-  final bool isClientMode;
-  final Seller? seller;
-  final Client? client;
-
   const InfoPage({
     Key? key,
-    required this.isClientMode,
-    this.seller,
-    this.client,
   }) : super(key: key);
 
   @override
@@ -50,29 +44,24 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
     }
   }
 
-  Future<void> _addEmptyImage() async {
-    var emptyAvatar = await getImageFileFromAssets(AppImage.emptyAvatar);
-    setState(() {
-      image = emptyAvatar;
-    });
-  }
-
-  void _saveCompany() {
+  void _saveCompany() async {
     if (_nameController.text.isEmpty) {
       showSnakeBar(context, S.of(context).enter_name_company);
     } else if (_phoneOrDescriptionController.text.isEmpty) {
       showSnakeBar(context, S.of(context).enter_description_company);
-    } else if (image == null) {
+    } else if (image == null && ref.watch(appSettingsProvider).user == null) {
       showSnakeBar(context, S.of(context).add_pic_company);
     } else {
-      if (isAnon) {
-      } else {}
-      ref.read(sellerSettingRepository).changeCompany(
-            context: context,
+      await ref.read(sellerSettingsController).changeCompany(
             name: _nameController.text,
             description: _phoneOrDescriptionController.text,
             photo: image!,
           );
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.storeLayout,
+        (route) => false,
+      );
     }
   }
 
@@ -85,11 +74,13 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
       showSnakeBar(context, S.of(context).add_card);
     } else {
       if (isAnon) {
-        ref.read(authRepository).signClient(
-            context: context, phoneNumber: _phoneOrDescriptionController.text);
-      } else {
-        ref.read(clientSettingRepository).changeUser(
+        ref.read(authController).signUp(
               context: context,
+              phoneNumber: _phoneOrDescriptionController.text,
+              mode: ModeEnum.client,
+            );
+      } else {
+        await ref.read(clientSettingsController).changeUser(
               name: _nameController.text,
               phone: _phoneOrDescriptionController.text,
               card: card!,
@@ -121,8 +112,27 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
 
   void _userAnon() {
     setState(() {
-      isAnon = ref.read(authRepository).isUserAnonymous();
+      isAnon = ref.read(authController).isUserAnonymous();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    var user = ref.watch(appSettingsProvider).user;
+    if (user != null && user is Seller) {
+      _nameController.text = user.name;
+      _phoneOrDescriptionController.text = user.description;
+    }
+    if (user != null && user is Client) {
+      _nameController.text = user.name;
+      _phoneOrDescriptionController.text = user.phone;
+      card = user.card;
+      _cardNumberController.text = user.card.number;
+      _cardNameController.text = user.card.userName;
+      _cardDateController.text = user.card.date;
+      _cardRCVController.text = user.card.rcv;
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -135,22 +145,6 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
     _cardNameController = TextEditingController();
     _cardDateController = TextEditingController();
     _cardRCVController = TextEditingController();
-    if (widget.seller != null) {
-      _nameController.text = widget.seller!.name;
-      _phoneOrDescriptionController.text = widget.seller!.description;
-    }
-    if (widget.client != null) {
-      _nameController.text = widget.client!.name;
-      _phoneOrDescriptionController.text = widget.client!.phone;
-      card = widget.client!.card;
-      _cardNumberController.text = widget.client!.card.number;
-      _cardNameController.text = widget.client!.card.userName;
-      _cardDateController.text = widget.client!.card.date;
-      _cardRCVController.text = widget.client!.card.rcv;
-    }
-    if (widget.client == null && widget.seller == null) {
-      _addEmptyImage();
-    }
   }
 
   @override
@@ -166,9 +160,13 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    var isClientMode = ref.watch(appSettingsProvider.notifier).isClientMode;
+    var user = ref.watch(appSettingsProvider).user;
     return Scaffold(
       appBar: AppBar(
-        leading: const BackArrowWidget(),
+        leading: BackArrowWidget(
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -177,74 +175,71 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
             child: Column(
               children: [
                 Text(
-                  widget.isClientMode
+                  isClientMode
                       ? S.of(context).editing_user_information
                       : S.of(context).editing_store_information,
                   style: Theme.of(context).textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                Stack(
-                  alignment: Alignment.centerRight,
-                  children: [
-                    Container(
-                      height: 150,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: borderColor),
-                        borderRadius: BorderRadius.circular(10),
+                isClientMode
+                    ? const SizedBox()
+                    : Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          Container(
+                            height: 150,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: borderColor),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: image != null
+                                ? Image.file(
+                                    image!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : user != null && user is Seller
+                                    ? Image.network(
+                                        user.photo!,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : const SizedBox(),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed: () => setState(() => image = null),
+                                icon: const Icon(
+                                  Icons.delete,
+                                  size: 45,
+                                  color: primaryButtonColor,
+                                ),
+                              ),
+                              const SizedBox(height: 50),
+                              IconButton(
+                                onPressed: _selectImage,
+                                icon: const Icon(
+                                  Icons.add,
+                                  size: 45,
+                                  color: primaryButtonColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      child: image != null
-                          ? Image.file(
-                              image!,
-                              fit: BoxFit.cover,
-                            )
-                          : widget.seller != null
-                              ? Image.network(
-                                  widget.seller!.photo,
-                                  fit: BoxFit.cover,
-                                )
-                              : widget.client != null
-                                  ? Image.network(
-                                      widget.client!.photo,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : const SizedBox(),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: _addEmptyImage,
-                          icon: const Icon(
-                            Icons.delete,
-                            size: 45,
-                            color: primaryButtonColor,
-                          ),
-                        ),
-                        const SizedBox(height: 50),
-                        IconButton(
-                          onPressed: _selectImage,
-                          icon: const Icon(
-                            Icons.add,
-                            size: 45,
-                            color: primaryButtonColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 24),
                 InputFieldWidget(
-                  hintText: widget.isClientMode
+                  hintText: isClientMode
                       ? S.of(context).how_call_you
                       : S.of(context).enter_name_company,
                   controller: _nameController,
                 ),
                 const SizedBox(height: 14),
-                widget.isClientMode
+                isClientMode
                     ? InputFieldWidget(
                         hintText: S.of(context).enter_phone_number,
                         controller: _phoneOrDescriptionController,
@@ -257,20 +252,19 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
                         isDescription: true,
                       ),
                 const SizedBox(height: 24),
-                widget.isClientMode
+                isClientMode
                     ? ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pushNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => ClientCardPage(
-                                cardNumberController: _cardNumberController,
-                                cardNameController: _cardNameController,
-                                cardDateController: _cardDateController,
-                                cardRCVController: _cardRCVController,
-                                saveCard: saveCard,
-                              ),
-                            ),
+                            AppRoutes.clientCardPage,
+                            arguments: {
+                              'cardNumberController': _cardNumberController,
+                              'cardNameController': _cardNameController,
+                              'cardDateController': _cardDateController,
+                              'cardRCVController': _cardRCVController,
+                              'saveCard': saveCard,
+                            },
                           );
                         },
                         child: SizedBox(
@@ -282,9 +276,7 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
                         ),
                       )
                     : const SizedBox(),
-                widget.isClientMode
-                    ? const SizedBox(height: 24)
-                    : const SizedBox(),
+                isClientMode ? const SizedBox(height: 24) : const SizedBox(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -301,7 +293,7 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: widget.isClientMode ? _saveUser : _saveCompany,
+                      onPressed: isClientMode ? _saveUser : _saveCompany,
                       child: SizedBox(
                         width: 100,
                         child: Text(

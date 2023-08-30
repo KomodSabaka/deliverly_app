@@ -1,12 +1,11 @@
-
-import 'package:deliverly_app/mobile_layout.dart';
+import 'package:deliverly_app/common/enums/mode_enum.dart';
+import 'package:deliverly_app/common/navigation/routes.dart';
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
+import 'package:deliverly_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../generated/l10n.dart';
-import '../../basket/repository/basket_state.dart';
 import '../widgets/auth_background.dart';
-import 'login_page.dart';
-import '../repository/auth_repository.dart';
 
 class SelectModePage extends ConsumerStatefulWidget {
   const SelectModePage({Key? key}) : super(key: key);
@@ -15,49 +14,47 @@ class SelectModePage extends ConsumerStatefulWidget {
   ConsumerState<SelectModePage> createState() => _SelectModePageState();
 }
 
-class _SelectModePageState extends ConsumerState<SelectModePage>{
+class _SelectModePageState extends ConsumerState<SelectModePage> {
   void _clientSigned() async {
-    var client = await ref.read(authRepository).getCurrentClientData();
+    ref.read(appSettingsProvider.notifier).setMode(mode: ModeEnum.client);
+    var client = await ref.read(authController).getUserData(mode: ModeEnum.client);
     if (client == null) {
-      ref.read(authRepository).signInAnonymous(context);
+      await ref.read(authController).signInAnonymous();
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.storeLayout,
+        (route) => false,
+      );
     } else {
-      ref.read(basketProvider.notifier).getProductsFromDB();
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MobileLayout(
-              isClientMode: true,
-              client: client,
-            ),
-          ),
-          (route) => false);
+      ref.read(appSettingsProvider.notifier).setUser(user: client);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.storeLayout,
+        (route) => false,
+      );
     }
   }
 
   void _sellerSigned() async {
-    var seller = await ref.read(authRepository).getCurrentSellerData();
+    ref.read(appSettingsProvider.notifier).setMode(mode: ModeEnum.seller);
+    var seller = await ref.read(authController).getUserData(mode: ModeEnum.seller);
     if (seller == null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
+      if (!mounted) return;
+      Navigator.pushNamed(context, AppRoutes.loginPage);
     } else {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MobileLayout(
-              isClientMode: false,
-              seller: seller,
-            ),
-          ),
-          (route) => false);
+      ref.read(appSettingsProvider.notifier).setUser(user: seller);
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.storeLayout,
+        (route) => false,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return AuthBackground(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -74,22 +71,20 @@ class _SelectModePageState extends ConsumerState<SelectModePage>{
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 48),
-            ElevatedButton(
-              style: ButtonStyle(
-                fixedSize:
-                    MaterialStateProperty.all<Size?>(const Size(374, 56)),
+            SizedBox.fromSize(
+              size: Size(size.width * 0.9, size.height * 0.07),
+              child: ElevatedButton(
+                onPressed: _clientSigned,
+                child: Text(S.of(context).customer),
               ),
-              onPressed: _clientSigned,
-              child: Text(S.of(context).customer),
             ),
             const SizedBox(height: 32),
-            ElevatedButton(
-              style: ButtonStyle(
-                fixedSize:
-                    MaterialStateProperty.all<Size?>(const Size(374, 56)),
+            SizedBox.fromSize(
+              size: Size(size.width * 0.9, size.height * 0.07),
+              child: ElevatedButton(
+                onPressed: _sellerSigned,
+                child: Text(S.of(context).seller),
               ),
-              onPressed: _sellerSigned,
-              child: Text(S.of(context).seller),
             ),
           ],
         ),

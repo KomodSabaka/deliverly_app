@@ -1,11 +1,11 @@
+import 'package:deliverly_app/common/navigation/routes.dart';
+import 'package:deliverly_app/common/utils/notification.dart';
 import 'package:deliverly_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'common/theme/app_theme.dart';
-import 'features/auth/pages/select_mode_page.dart';
 import 'generated/l10n.dart';
 
 void main() async {
@@ -13,9 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-    SystemUiOverlay.bottom,
-  ]);
+  NotificationService().initialize();
   runApp(const MyApp());
 }
 
@@ -34,11 +32,12 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        locale: const Locale('ru'),
         supportedLocales: const [
           Locale('ru'),
+          Locale('en'),
         ],
-        home: const SelectModePage(),
+        onGenerateRoute: (settings) => AppRoutes.generateRoute(settings),
+        initialRoute: AppRoutes.selectModePage,
       ),
     );
   }

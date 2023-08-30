@@ -1,9 +1,10 @@
+import 'package:deliverly_app/common/enums/mode_enum.dart';
+import 'package:deliverly_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/input_field_widget.dart';
 import '../../../generated/l10n.dart';
-import '../repository/auth_repository.dart';
 import '../widgets/auth_background.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -16,13 +17,14 @@ class LoginPage extends ConsumerStatefulWidget {
 class _RegistrationSellerPageState extends ConsumerState<LoginPage> {
   late TextEditingController _phoneController;
 
-  void _signup() async {
+  void _signUp() async {
     if (_phoneController.text.isEmpty) {
       showSnakeBar(context, S.of(context).enter_phone_number);
     } else {
-      ref.read(authRepository).signSeller(
-            context,
-            _phoneController.text,
+      ref.read(authController).signUp(
+            context: context,
+            phoneNumber: _phoneController.text,
+            mode: ModeEnum.seller,
           );
     }
   }
@@ -76,7 +78,7 @@ class _RegistrationSellerPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: _signup,
+                  onPressed: _signUp,
                   child: SizedBox(
                     width: 100,
                     child: Text(

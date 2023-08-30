@@ -1,12 +1,12 @@
+import 'package:deliverly_app/models/item_in_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../models/product.dart';
 
 class BasketProductCard extends ConsumerStatefulWidget {
-  final Product product;
-  final Function(Product product) deleteProductFromBasket;
+  final ItemInCart product;
+  final Function({required String id}) deleteProductFromBasket;
 
   const BasketProductCard({
     Key? key,
@@ -21,6 +21,7 @@ class BasketProductCard extends ConsumerStatefulWidget {
 class _BasketProductCardState extends ConsumerState<BasketProductCard> {
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Column(
@@ -41,17 +42,25 @@ class _BasketProductCardState extends ConsumerState<BasketProductCard> {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  Text(
-                    widget.product.name,
-                    style: Theme.of(context).textTheme.bodyMedium,
+              Flexible(
+                child: SizedBox(
+                  width: size.width * 0.3,
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.product.name,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                      ),
+                      Text(
+                        '${widget.product.price} руб.',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ],
                   ),
-                  Text(
-                    '${widget.product.price}/руб.',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
+                ),
               ),
               Column(
                 children: [
@@ -66,9 +75,8 @@ class _BasketProductCardState extends ConsumerState<BasketProductCard> {
             ],
           ),
           TextButton(
-            onPressed: () {
-              widget.deleteProductFromBasket(widget.product);
-            },
+            onPressed: () =>
+                widget.deleteProductFromBasket(id: widget.product.id),
             child: Text(
               S.of(context).delete_product,
             ),

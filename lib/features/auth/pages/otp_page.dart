@@ -1,35 +1,41 @@
+import 'package:deliverly_app/common/navigation/routes.dart';
+import 'package:deliverly_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../generated/l10n.dart';
-import '../repository/auth_repository.dart';
 import '../widgets/auth_background.dart';
 
 class OTPPage extends ConsumerStatefulWidget {
   final String verificationId;
-  final bool isClientMode;
 
   const OTPPage({
     Key? key,
     required this.verificationId,
-    required this.isClientMode,
   }) : super(key: key);
 
   @override
   ConsumerState<OTPPage> createState() => _OTPPageState();
 }
 
-class _OTPPageState extends ConsumerState<OTPPage>{
+class _OTPPageState extends ConsumerState<OTPPage> {
   late final TextEditingController otpController;
 
-  void otpSend(String value) {
+  void otpSend(String value) async {
     if (value.length == 6) {
-      ref.read(authRepository).verifyOTP(
-            context: context,
+      await ref
+          .read(authController)
+          .verifyOTP(
             verificationId: widget.verificationId,
             userOTP: value,
-            isClientMode: widget.isClientMode,
-          );
+          )
+          .whenComplete(() async {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRoutes.storeLayout,
+          (route) => false,
+        );
+      });
     }
   }
 
@@ -50,26 +56,28 @@ class _OTPPageState extends ConsumerState<OTPPage>{
     return AuthBackground(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              S.of(context).enter_otp,
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 56),
-            PinCodeTextField(
-              appContext: context,
-              length: 6,
-              controller: otpController,
-              keyboardType: TextInputType.number,
-              autoDisposeControllers: false,
-              onChanged: (String value) => otpSend(value),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                S.of(context).enter_otp,
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 56),
+              PinCodeTextField(
+                appContext: context,
+                length: 6,
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                autoDisposeControllers: false,
+                onChanged: (String value) => otpSend(value),
+              ),
+            ],
+          ),
         ),
       ),
     );

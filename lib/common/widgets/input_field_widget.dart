@@ -1,7 +1,8 @@
+import 'package:deliverly_app/common/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../utils/constants.dart';
-
 
 class InputFieldWidget extends StatelessWidget {
   final String hintText;
@@ -19,29 +20,9 @@ class InputFieldWidget extends StatelessWidget {
     this.isDescription = false,
   }) : super(key: key);
 
-  void phoneValid(String value) {
-    if (value.endsWith(' ') || value.endsWith('-') || value.endsWith('+')) {
-      controller.text = value.substring(0, value.length - 1);
-      controller.selection =
-          TextSelection.collapsed(offset: controller.text.length);
-    } else if (value.length == 1) {
-      controller.text = '+$value ';
-      controller.selection =
-          TextSelection.collapsed(offset: controller.text.length);
-    } else if (value.length == 6) {
-      controller.text = '$value ';
-      controller.selection =
-          TextSelection.collapsed(offset: controller.text.length);
-    } else if (value.length == 10 || value.length == 13) {
-      controller.text = '$value-';
-      controller.selection =
-          TextSelection.collapsed(offset: controller.text.length);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       style: Theme.of(context).textTheme.bodyLarge,
       cursorColor: secondaryTextColor,
       controller: controller,
@@ -49,8 +30,13 @@ class InputFieldWidget extends StatelessWidget {
       maxLength: isPhoneField ? 16 : null,
       maxLines: isDescription ? null : 1,
       onChanged: (value) {
-        if (isPhoneField) phoneValid(value);
+        if (isPhoneField) {
+          phoneNumberFormat(value: value, controller: controller);
+        }
       },
+      inputFormatters: [
+        FilteringTextInputFormatter.singleLineFormatter,
+      ],
       decoration: InputDecoration(
         focusColor: borderColor,
         fillColor: borderColor,

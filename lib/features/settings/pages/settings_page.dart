@@ -1,27 +1,26 @@
-import 'package:deliverly_app/models/seller.dart';
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
+import 'package:deliverly_app/common/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/constants.dart';
 import '../../../generated/l10n.dart';
-import '../../../models/client.dart';
-import 'history_orders_page.dart';
-import 'info_page.dart';
 
-class SellerSettingPage extends ConsumerWidget {
-  final bool isClientMode;
-  final Seller? seller;
-  final Client? client;
+class SettingPage extends ConsumerStatefulWidget {
 
-  const SellerSettingPage({
+  const SettingPage({
     Key? key,
-    required this.isClientMode,
-    this.seller,
-    this.client,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _SellerSettingPageState();
+}
+
+class _SellerSettingPageState extends ConsumerState<SettingPage> {
+
+  @override
+  Widget build(BuildContext context) {
+    var isClientMode = ref.watch(appSettingsProvider.notifier).isClientMode;
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -36,15 +35,9 @@ class SellerSettingPage extends ConsumerWidget {
             const SizedBox(height: 27),
             TextButton(
               onPressed: () async {
-                Navigator.push(
+                Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(
-                  builder: (context) => InfoPage(
-                      isClientMode: isClientMode,
-                      seller: seller,
-                      client: client,
-                    ),
-                  ),
+                  AppRoutes.infoPage,
                 );
               },
               child: Row(
@@ -69,28 +62,26 @@ class SellerSettingPage extends ConsumerWidget {
             ),
             isClientMode
                 ? TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HistoryOrdersPage(),
-                        ),
-                      );
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Icon(
-                          Icons.history,
-                          color: primaryTextColor,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          S.of(context).purchase_history,
-                        ),
-                      ],
-                    ),
-                  )
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.historyPage,
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.history,
+                    color: primaryTextColor,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    S.of(context).purchase_history,
+                  ),
+                ],
+              ),
+            )
                 : const SizedBox(),
           ],
         ),

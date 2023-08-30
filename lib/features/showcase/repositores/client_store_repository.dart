@@ -5,16 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/utils/constants.dart';
 import '../../../models/product.dart';
 
-final userRepository = Provider((ref) => UserRepository(
+final clientStoreRepository = Provider((ref) => ClientStoreRepository(
       firebaseAuth: FirebaseAuth.instance,
       firebaseFirestore: FirebaseFirestore.instance,
     ));
 
-class UserRepository {
+class ClientStoreRepository {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
 
-  UserRepository({
+  ClientStoreRepository({
     required this.firebaseAuth,
     required this.firebaseFirestore,
   });
@@ -34,7 +34,9 @@ class UserRepository {
     );
   }
 
-  Stream<List<Product>> searchProducts(String text) {
+  Stream<List<Product>> searchProducts({
+    required String text,
+  }) {
     return firebaseFirestore
         .collection(FirebaseFields.products)
         .snapshots()

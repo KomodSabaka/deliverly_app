@@ -54,5 +54,7 @@
   "search": "Поиск",
   "enter_company_name": "Введите название компании",
   "enter_company_description": "Введите описание компании",
-  "add_pic_company": "Добавте изображение компании"
+  "add_pic_company": "Добавте изображение компании",
+  "select_date": "Выберите дату",
+  "select_time": "Выберите время"
 }

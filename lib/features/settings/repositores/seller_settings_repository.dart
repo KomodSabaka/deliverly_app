@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/constants.dart';
 import '../../../common/utils/utils.dart';
-import '../../../mobile_layout.dart';
-import '../../../models/seller.dart';
+import '../../../models/user.dart';
 
 final sellerSettingRepository = Provider((ref) => SellerSettingRepository(
       firebaseAuth: FirebaseAuth.instance,
@@ -24,8 +22,7 @@ class SellerSettingRepository {
     required this.firebaseFirestore,
   });
 
-  void changeCompany({
-    required BuildContext context,
+ Future changeCompany({
     required String name,
     required String description,
     required File? photo,
@@ -33,7 +30,12 @@ class SellerSettingRepository {
     try {
       String uid = firebaseAuth.currentUser!.uid;
       String? phone = firebaseAuth.currentUser!.phoneNumber;
-      String urlPhoto = await storeFileToFirebase('${FirebaseFields.companyPic}/$uid', photo!);
+      String? urlPhoto;
+
+      if (photo != null) {
+        urlPhoto = await storeFileToFirebase(
+            '${FirebaseFields.companyPic}/$uid', photo);
+      }
 
       Seller seller = Seller(
         id: uid,
@@ -47,19 +49,8 @@ class SellerSettingRepository {
           .collection(FirebaseFields.seller)
           .doc(uid)
           .set(seller.toMap());
-
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MobileLayout(
-              isClientMode: false,
-              seller: seller,
-            ),
-          ),
-              (route) => false);
     } catch (e, s) {
       print(s);
     }
   }
-
 }

@@ -25,7 +25,7 @@ class ClientCardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const BackArrowWidget(),
+        leading:  BackArrowWidget(onPressed: () => Navigator.pop(context),),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

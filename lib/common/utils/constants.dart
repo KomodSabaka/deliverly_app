@@ -8,7 +8,7 @@ const secondaryTextColor = Color(0xFF9586A8);
 const borderColor = Color(0xFFD9D0E3);
 const selectedBottomIconColor = Color(0xFF7203FF);
 
-abstract class FirebaseFields {
+class FirebaseFields {
   static const seller = 'sellers';
   static const client = 'clients';
   static const products = 'products';
@@ -18,9 +18,10 @@ abstract class FirebaseFields {
   static const productPic = 'productPic';
   static const sellerId = 'sellerId';
   static const id = 'id';
+  static const name = 'name';
 }
 
-abstract class AppImage {
+class AppImage {
   static const arrowBack = 'assets/icons/arrow_back.svg';
   static const grid = 'assets/icons/grid.svg';
   static const search = 'assets/icons/search.svg';

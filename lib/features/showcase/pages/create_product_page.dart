@@ -1,38 +1,36 @@
 import 'dart:io';
-
+import 'package:deliverly_app/features/showcase/controllers/seller_store_controller.dart';
 import 'package:deliverly_app/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../common/utils/constants.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/back_arrow_widget.dart';
 import '../../../common/widgets/input_field_widget.dart';
 import '../../../generated/l10n.dart';
-import '../repositores/seller_store_repository.dart';
 
-class AddProductPage extends ConsumerStatefulWidget {
-  final bool isRefactoring;
+class CreateProductPage extends ConsumerStatefulWidget {
   final Product? product;
+  final bool isRefactoring;
 
-  const AddProductPage({
+  const CreateProductPage({
     Key? key,
-    required this.isRefactoring,
     this.product,
+    this.isRefactoring = false,
   }) : super(key: key);
 
   @override
-  ConsumerState<AddProductPage> createState() => _AddProductPageState();
+  ConsumerState<CreateProductPage> createState() => _AddProductPageState();
 }
 
-class _AddProductPageState extends ConsumerState<AddProductPage>
+class _AddProductPageState extends ConsumerState<CreateProductPage>
     with SingleTickerProviderStateMixin {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late TextEditingController _priceController;
   File? image;
 
-  Future<void> selectImage(BuildContext context) async {
+  Future<void> selectImage() async {
     var pickedImage = await pickImage(context);
     if (pickedImage != null) {
       setState(() {
@@ -52,22 +50,22 @@ class _AddProductPageState extends ConsumerState<AddProductPage>
       showSnakeBar(context, S.of(context).add_cost_product);
     } else {
       if (widget.isRefactoring) {
-        ref.read(sellerStoreRepository).refactorProduct(
-              context: context,
+        ref.read(sellerStoreController).refactorProduct(
               product: widget.product!,
               name: _nameController.text,
               price: _priceController.text,
               description: _descriptionController.text,
               image: image,
             );
+        Navigator.pop(context);
       } else {
-        ref.read(sellerStoreRepository).addProducts(
-              context: context,
+        ref.read(sellerStoreController).addProducts(
               name: _nameController.text,
               price: _priceController.text,
               description: _descriptionController.text,
               image: image!,
             );
+        Navigator.pop(context);
       }
     }
   }
@@ -97,7 +95,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const BackArrowWidget(),
+        leading: BackArrowWidget(onPressed: () => Navigator.pop(context),),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -153,7 +151,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage>
                       ),
                       const SizedBox(height: 50),
                       IconButton(
-                        onPressed: () => selectImage(context),
+                        onPressed: selectImage,
                         icon: const Icon(
                           Icons.add,
                           size: 45,
@@ -186,9 +184,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => Navigator.pop(context),
                     child: SizedBox(
                       width: 100,
                       child: Text(

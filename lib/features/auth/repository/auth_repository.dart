@@ -1,35 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:deliverly_app/models/seller.dart';
-import 'package:deliverly_app/mobile_layout.dart';
-import 'package:deliverly_app/models/client.dart';
+import 'package:deliverly_app/common/navigation/routes.dart';
+import 'package:deliverly_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/utils/constants.dart';
-import '../pages/otp_page.dart';
 
 final authRepository = Provider((ref) => AuthRepository(
       firebaseAuth: FirebaseAuth.instance,
       firebaseFirestore: FirebaseFirestore.instance,
-      ref: ref,
     ));
 
-class AuthRepository {
+class AuthRepository  {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
-  final ProviderRef ref;
 
   AuthRepository({
     required this.firebaseAuth,
     required this.firebaseFirestore,
-    required this.ref,
   });
 
-  void signSeller(
-    BuildContext context,
-    String phoneNumber,
-  ) async {
+  void signSeller({
+    required BuildContext context,
+    required String phoneNumber,
+  }) async {
     try {
       await firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
@@ -40,14 +34,10 @@ class AuthRepository {
           throw Exception(e);
         },
         codeSent: ((String verificationId, int? resendToken) async {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => OTPPage(
-                verificationId: verificationId,
-                isClientMode: false,
-              ),
-            ),
+            AppRoutes.otpPage,
+            arguments: {'verificationId': verificationId},
           );
         }),
         codeAutoRetrievalTimeout: (String verificationId) {},
@@ -71,14 +61,10 @@ class AuthRepository {
           throw Exception(e);
         },
         codeSent: ((String verificationId, int? resendToken) async {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => OTPPage(
-                verificationId: verificationId,
-                isClientMode: true,
-              ),
-            ),
+            AppRoutes.otpPage,
+            arguments: {'verificationId': verificationId},
           );
         }),
         codeAutoRetrievalTimeout: (String verificationId) {},
@@ -88,25 +74,21 @@ class AuthRepository {
     }
   }
 
-  Future<void> signInAnonymous(BuildContext context) async {
-    await firebaseAuth.signInAnonymously();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MobileLayout(isClientMode: true),
-        ),
-        (route) => false);
+  Future<void> signInAnonymous() async {
+    try {
+      await firebaseAuth.signInAnonymously();
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   bool isUserAnonymous() {
     return firebaseAuth.currentUser!.isAnonymous;
   }
 
-  void verifyOTP({
-    required BuildContext context,
+  Future verifyOTP({
     required String verificationId,
     required String userOTP,
-    required bool isClientMode,
   }) async {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -114,45 +96,43 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await firebaseAuth.signInWithCredential(credential);
-
-      if (isClientMode) {
-        Navigator.pop(context);
-      } else {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MobileLayout(
-                isClientMode: isClientMode,
-              ),
-            ),
-            (route) => false);
-      }
     } on FirebaseAuthException catch (e) {
       print(e);
     }
   }
 
   Future<Seller?> getCurrentSellerData() async {
-    var companyData = await firebaseFirestore
-        .collection(FirebaseFields.seller)
-        .doc(firebaseAuth.currentUser?.uid)
-        .get();
-    Seller? company;
-    if (companyData.data() != null) {
-      company = Seller.fromMap(companyData.data()!);
+    try {
+      var sellerData = await firebaseFirestore
+          .collection(FirebaseFields.seller)
+          .doc(firebaseAuth.currentUser?.uid)
+          .get();
+      Seller? seller;
+      if (sellerData.data() != null) {
+        seller = Seller.fromMap(sellerData.data()!);
+      }
+      return seller;
+    } on Exception catch (e) {
+      print(e);
+      return null;
     }
-    return company;
   }
 
   Future<Client?> getCurrentClientData() async {
-    var userData = await firebaseFirestore
-        .collection(FirebaseFields.client)
-        .doc(firebaseAuth.currentUser?.uid)
-        .get();
-    Client? user;
-    if (userData.data() != null) {
-      user = Client.fromMap(userData.data()!);
+    try {
+      var clientData = await firebaseFirestore
+          .collection(FirebaseFields.client)
+          .doc(firebaseAuth.currentUser?.uid)
+          .get();
+
+      Client? client;
+      if (clientData.data() != null) {
+        client = Client.fromMap(clientData.data()!);
+      }
+      return client;
+    } on Exception catch (e) {
+      print(e);
+      return null;
     }
-    return user;
   }
 }

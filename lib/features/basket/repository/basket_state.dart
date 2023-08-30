@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import 'package:deliverly_app/common/utils/notification.dart';
+import 'package:deliverly_app/models/date_and_time.dart';
+import 'package:deliverly_app/models/item_in_cart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,26 +12,31 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../common/utils/constants.dart';
-import '../../../common/utils/utils.dart';
 import '../../../generated/l10n.dart';
 import '../../../models/product.dart';
 import '../../../models/purchase_order.dart';
 
 final basketProvider =
-    StateNotifierProvider<Basket, List<Product>>((ref) => Basket());
+    StateNotifierProvider<Basket, List<ItemInCart>>((ref) => Basket());
 
-class Basket extends StateNotifier<List<Product>> {
+class Basket extends StateNotifier<List<ItemInCart>> {
   Basket() : super([]);
   final String basketKey = 'basket_key';
 
-  Future<void> addProduct(
-    BuildContext context,
-    Product product,
-    int count,
-  ) async {
-    Product selectedProduct = product.copyWith(
-        count: count.toString(),
-        cost: (count * int.parse(product.price)).toString());
+  Future<void> addProduct({
+    required Product product,
+    required int count,
+  }) async {
+    ItemInCart selectedProduct = ItemInCart(
+      count.toString(),
+      (count * int.parse(product.price)).toString(),
+      id: product.id,
+      sellerId: product.sellerId,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    );
+
     var productInBasket =
         state.firstWhereOrNull((element) => element.id == selectedProduct.id);
     if (productInBasket == null) {
@@ -38,24 +46,26 @@ class Basket extends StateNotifier<List<Product>> {
       state.add(selectedProduct);
     }
     var db = await SharedPreferences.getInstance();
-    db.setString(basketKey, json.encode(state));
-
-    showSnakeBar(context, S.of(context).added_cart);
+    await db.setString(basketKey, json.encode(state));
   }
 
-  Future<void> deleteProductFromBasket(Product product) async {
-    state = List.from(state)..remove(product);
+  Future<void> deleteProductFromBasket({required String id}) async {
+    state = List.from(state)..removeWhere((element) => element.id == id);
     final db = await SharedPreferences.getInstance();
-    db.remove(basketKey);
-    db.setString(basketKey, json.encode(state));
+
+    await db.remove(basketKey);
+    await db.setString(basketKey, json.encode(state));
   }
 
-  void buyProducts() async {
+  void buyProducts({
+    required BuildContext context,
+    required DateAndTime dateAndTime,
+  }) async {
     List<Product> basketList = state;
     state = [];
 
     final db = await SharedPreferences.getInstance();
-    db.remove(basketKey);
+    await db.remove(basketKey);
     String buyId = const Uuid().v1();
 
     PurchaseOrder purchase = PurchaseOrder(
@@ -73,6 +83,21 @@ class Basket extends StateNotifier<List<Product>> {
         .collection(FirebaseFields.buyList)
         .doc(buyId)
         .set(purchase.toMap());
+    NotificationService().createNotification(
+      id: 10,
+      title: S.of(context).thank_purchase,
+      body: S.of(context).thank_purchase,
+      dateAndTime: dateAndTime,
+    );
+  }
+
+  int getSum() {
+    int sum = 0;
+
+    for (var element in state) {
+      sum += int.parse(element.cost);
+    }
+    return sum;
   }
 
   Future getProductsFromDB() async {
@@ -80,8 +105,8 @@ class Basket extends StateNotifier<List<Product>> {
     final products = db.getString(basketKey);
     if (products == null) return null;
     Iterable l = json.decode(products);
-    List<Product> basketList =
-        List<Product>.from(l.map((model) => Product.fromJson(model)));
+    List<ItemInCart> basketList =
+        List<ItemInCart>.from(l.map((model) => ItemInCart.fromJson(model)));
     state = basketList;
   }
 }

@@ -50,360 +50,360 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Введите номер телефона`
+  /// `Enter phone number`
   String get enter_phone_number {
     return Intl.message(
-      'Введите номер телефона',
+      'Enter phone number',
       name: 'enter_phone_number',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите код отправленный на указаный номер телефона`
+  /// `Enter the code sent to the specified phone number`
   String get enter_otp {
     return Intl.message(
-      'Введите код отправленный на указаный номер телефона',
+      'Enter the code sent to the specified phone number',
       name: 'enter_otp',
       desc: '',
       args: [],
     );
   }
 
-  /// `Логин`
+  /// `Login`
   String get login {
     return Intl.message(
-      'Логин',
+      'Login',
       name: 'login',
       desc: '',
       args: [],
     );
   }
 
-  /// `Назад`
+  /// `Back`
   String get back {
     return Intl.message(
-      'Назад',
+      'Back',
       name: 'back',
       desc: '',
       args: [],
     );
   }
 
-  /// `Подтвердить`
+  /// `Confirm`
   String get confirm {
     return Intl.message(
-      'Подтвердить',
+      'Confirm',
       name: 'confirm',
       desc: '',
       args: [],
     );
   }
 
-  /// `Выберите режим`
+  /// `Select mode`
   String get select_mode {
     return Intl.message(
-      'Выберите режим',
+      'Select mode',
       name: 'select_mode',
       desc: '',
       args: [],
     );
   }
 
-  /// `Покупатель`
+  /// `Customer`
   String get customer {
     return Intl.message(
-      'Покупатель',
+      'Customer',
       name: 'customer',
       desc: '',
       args: [],
     );
   }
 
-  /// `Продавец`
+  /// `Seller`
   String get seller {
     return Intl.message(
-      'Продавец',
+      'Seller',
       name: 'seller',
       desc: '',
       args: [],
     );
   }
 
-  /// `Спасибо за покупку`
+  /// `Thank you for your purchase`
   String get thank_purchase {
     return Intl.message(
-      'Спасибо за покупку',
+      'Thank you for your purchase',
       name: 'thank_purchase',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите данные о себе`
+  /// `Enter your information`
   String get enter_information {
     return Intl.message(
-      'Введите данные о себе',
+      'Enter your information',
       name: 'enter_information',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ваша корзина пуста`
+  /// `Your cart is empty`
   String get cart_empty {
     return Intl.message(
-      'Ваша корзина пуста',
+      'Your cart is empty',
       name: 'cart_empty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Оплатить,`
+  /// `Pay`
   String get pay {
     return Intl.message(
-      'Оплатить,',
+      'Pay',
       name: 'pay',
       desc: '',
       args: [],
     );
   }
 
-  /// `К оплате`
+  /// `To Pay`
   String get to_pay {
     return Intl.message(
-      'К оплате',
+      'To Pay',
       name: 'to_pay',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавлено в карзину`
+  /// `Added to cart`
   String get added_cart {
     return Intl.message(
-      'Добавлено в карзину',
+      'Added to cart',
       name: 'added_cart',
       desc: '',
       args: [],
     );
   }
 
-  /// `Общая стоимость`
+  /// `Total cost`
   String get total_cost {
     return Intl.message(
-      'Общая стоимость',
+      'Total cost',
       name: 'total_cost',
       desc: '',
       args: [],
     );
   }
 
-  /// `История покупок`
+  /// `Purchase history`
   String get purchase_history {
     return Intl.message(
-      'История покупок',
+      'Purchase history',
       name: 'purchase_history',
       desc: '',
       args: [],
     );
   }
 
-  /// `Вы ничего еще\nне заказывали`
+  /// `You haven't ordered anything yet`
   String get you_havent_ordered {
     return Intl.message(
-      'Вы ничего еще\nне заказывали',
+      'You haven\'t ordered anything yet',
       name: 'you_havent_ordered',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите номер карты`
+  /// `Enter card number`
   String get enter_num_card {
     return Intl.message(
-      'Введите номер карты',
+      'Enter card number',
       name: 'enter_num_card',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите имя карты`
+  /// `Enter card name`
   String get enter_name_card {
     return Intl.message(
-      'Введите имя карты',
+      'Enter card name',
       name: 'enter_name_card',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите дату карты`
+  /// `Enter card date`
   String get enter_date_card {
     return Intl.message(
-      'Введите дату карты',
+      'Enter card date',
       name: 'enter_date_card',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите RCV карты`
+  /// `Enter card RCV`
   String get enter_rcv_card {
     return Intl.message(
-      'Введите RCV карты',
+      'Enter card RCV',
       name: 'enter_rcv_card',
       desc: '',
       args: [],
     );
   }
 
-  /// `Карта сохранена`
+  /// `Card saved`
   String get card_saved {
     return Intl.message(
-      'Карта сохранена',
+      'Card saved',
       name: 'card_saved',
       desc: '',
       args: [],
     );
   }
 
-  /// `Как к вам обращаться`
+  /// `How should we address you`
   String get how_call_you {
     return Intl.message(
-      'Как к вам обращаться',
+      'How should we address you',
       name: 'how_call_you',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавьте карту`
+  /// `Add card`
   String get add_card {
     return Intl.message(
-      'Добавьте карту',
+      'Add card',
       name: 'add_card',
       desc: '',
       args: [],
     );
   }
 
-  /// `Редактирование информации о магазине`
+  /// `Editing store information`
   String get editing_store_information {
     return Intl.message(
-      'Редактирование информации о магазине',
+      'Editing store information',
       name: 'editing_store_information',
       desc: '',
       args: [],
     );
   }
 
-  /// `Редактирование информации о себе`
+  /// `Editing your information`
   String get editing_user_information {
     return Intl.message(
-      'Редактирование информации о себе',
+      'Editing your information',
       name: 'editing_user_information',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите имя компании`
+  /// `Enter company name`
   String get enter_name_company {
     return Intl.message(
-      'Введите имя компании',
+      'Enter company name',
       name: 'enter_name_company',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите описание компании`
+  /// `Enter company description`
   String get enter_description_company {
     return Intl.message(
-      'Введите описание компании',
+      'Enter company description',
       name: 'enter_description_company',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавить карту для оплаты`
+  /// `Add card for payment`
   String get add_card_for_payment {
     return Intl.message(
-      'Добавить карту для оплаты',
+      'Add card for payment',
       name: 'add_card_for_payment',
       desc: '',
       args: [],
     );
   }
 
-  /// `Подтвердить номер телефона`
+  /// `Confirm phone number`
   String get confirm_phone_num {
     return Intl.message(
-      'Подтвердить номер телефона',
+      'Confirm phone number',
       name: 'confirm_phone_num',
       desc: '',
       args: [],
     );
   }
 
-  /// `Изменить`
+  /// `Change`
   String get change {
     return Intl.message(
-      'Изменить',
+      'Change',
       name: 'change',
       desc: '',
       args: [],
     );
   }
 
-  /// `Настройки`
+  /// `Settings`
   String get settings {
     return Intl.message(
-      'Настройки',
+      'Settings',
       name: 'settings',
       desc: '',
       args: [],
     );
   }
 
-  /// `Изменить информацию о себе`
+  /// `Change your information`
   String get change_information_yourself {
     return Intl.message(
-      'Изменить информацию о себе',
+      'Change your information',
       name: 'change_information_yourself',
       desc: '',
       args: [],
     );
   }
 
-  /// `Номер карты`
+  /// `Card number`
   String get num_card {
     return Intl.message(
-      'Номер карты',
+      'Card number',
       name: 'num_card',
       desc: '',
       args: [],
     );
   }
 
-  /// `Имя`
+  /// `Name`
   String get name {
     return Intl.message(
-      'Имя',
+      'Name',
       name: 'name',
       desc: '',
       args: [],
     );
   }
 
-  /// `Дата`
+  /// `Date`
   String get date {
     return Intl.message(
-      'Дата',
+      'Date',
       name: 'date',
       desc: '',
       args: [],
@@ -420,191 +420,211 @@ class S {
     );
   }
 
-  /// `Сохранить карту`
+  /// `Save card`
   String get save_card {
     return Intl.message(
-      'Сохранить карту',
+      'Save card',
       name: 'save_card',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавте изображение продукта`
+  /// `Add product image`
   String get add_pic_product {
     return Intl.message(
-      'Добавте изображение продукта',
+      'Add product image',
       name: 'add_pic_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавте имя продукта`
+  /// `Add product name`
   String get add_name_product {
     return Intl.message(
-      'Добавте имя продукта',
+      'Add product name',
       name: 'add_name_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавте описание продукта`
+  /// `Add product description`
   String get add_description_product {
     return Intl.message(
-      'Добавте описание продукта',
+      'Add product description',
       name: 'add_description_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавте стоимость продукта`
+  /// `Add product cost`
   String get add_cost_product {
     return Intl.message(
-      'Добавте стоимость продукта',
+      'Add product cost',
       name: 'add_cost_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Новый продукт`
+  /// `New product`
   String get new_product {
     return Intl.message(
-      'Новый продукт',
+      'New product',
       name: 'new_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите название продукта`
+  /// `Enter product name`
   String get enter_name_product {
     return Intl.message(
-      'Введите название продукта',
+      'Enter product name',
       name: 'enter_name_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите описание продукта`
+  /// `Enter product description`
   String get enter_description_product {
     return Intl.message(
-      'Введите описание продукта',
+      'Enter product description',
       name: 'enter_description_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите стоимость продукта в рублях`
+  /// `Enter product cost in rubles`
   String get enter_cost_in_rub {
     return Intl.message(
-      'Введите стоимость продукта в рублях',
+      'Enter product cost in rubles',
       name: 'enter_cost_in_rub',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавть`
+  /// `Add`
   String get add {
     return Intl.message(
-      'Добавть',
+      'Add',
       name: 'add',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавить в корзину`
+  /// `Add to basket`
   String get add_to_basket {
     return Intl.message(
-      'Добавить в корзину',
+      'Add to basket',
       name: 'add_to_basket',
       desc: '',
       args: [],
     );
   }
 
-  /// `Удалить товар`
+  /// `Delete product`
   String get delete_product {
     return Intl.message(
-      'Удалить товар',
+      'Delete product',
       name: 'delete_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Изменить товар`
+  /// `Change product`
   String get change_product {
     return Intl.message(
-      'Изменить товар',
+      'Change product',
       name: 'change_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Продукты`
+  /// `Products`
   String get products {
     return Intl.message(
-      'Продукты',
+      'Products',
       name: 'products',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ваши продукты`
+  /// `Your products`
   String get your_products {
     return Intl.message(
-      'Ваши продукты',
+      'Your products',
       name: 'your_products',
       desc: '',
       args: [],
     );
   }
 
-  /// `Поиск`
+  /// `Search`
   String get search {
     return Intl.message(
-      'Поиск',
+      'Search',
       name: 'search',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите название компании`
+  /// `Enter company name`
   String get enter_company_name {
     return Intl.message(
-      'Введите название компании',
+      'Enter company name',
       name: 'enter_company_name',
       desc: '',
       args: [],
     );
   }
 
-  /// `Введите описание компании`
+  /// `Enter company description`
   String get enter_company_description {
     return Intl.message(
-      'Введите описание компании',
+      'Enter company description',
       name: 'enter_company_description',
       desc: '',
       args: [],
     );
   }
 
-  /// `Добавте изображение компании`
+  /// `Add company image`
   String get add_pic_company {
     return Intl.message(
-      'Добавте изображение компании',
+      'Add company image',
       name: 'add_pic_company',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select date`
+  String get select_date {
+    return Intl.message(
+      'Select date',
+      name: 'select_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select time`
+  String get select_time {
+    return Intl.message(
+      'Select time',
+      name: 'select_time',
       desc: '',
       args: [],
     );
