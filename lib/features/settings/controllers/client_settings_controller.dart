@@ -21,17 +21,15 @@ class ClientSettingsController {
     required this.clientSettingRepository,
   });
 
-  Future changeUser({
+  Future changeClient({
     required String name,
     required String phone,
     required PayCard card,
-    required File? photo,
   }) async {
-    await clientSettingRepository.changeUser(
+    await clientSettingRepository.changeClient(
       name: name,
       phone: phone,
       card: card,
-      photo: photo,
     );
   }
 

@@ -9,9 +9,11 @@ import 'package:deliverly_app/features/showcase/pages/product_page.dart';
 import 'package:deliverly_app/store_layout.dart';
 import 'package:flutter/material.dart';
 
+import '../../features/splash/pages/splash_page.dart';
 
 class AppRoutes {
-  static const selectModePage = '/';
+  static const splashPage = '/';
+  static const selectModePage = '/select_mode_page';
   static const storeLayout = '/store_layout';
   static const loginPage = '/login_page';
   static const otpPage = '/otp_page';
@@ -23,6 +25,10 @@ class AppRoutes {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case splashPage:
+        return MaterialPageRoute(
+          builder: (context) => const SplashPage(),
+        );
       case selectModePage:
         return MaterialPageRoute(
           builder: (context) => const SelectModePage(),
@@ -70,12 +76,14 @@ class AppRoutes {
           ),
         );
       case createProductPage:
+        final arguments = settings.arguments as Map<String, dynamic>;
         return PageRouteBuilder(
           transitionDuration: const Duration(milliseconds: 500),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           pageBuilder: (context, animation, secondaryAnimation) =>
               CreateProductPage(
-            isRefactoring: settings.arguments as bool,
+            product: arguments['product'],
+            isRefactoring: arguments['isRefactoring'],
           ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             var begin = const Offset(0.0, 1.0);

@@ -2,8 +2,6 @@ import 'package:deliverly_app/features/settings/controllers/client_settings_cont
 import 'package:deliverly_app/models/purchase_order.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-
-import '../../../common/utils/utils.dart';
 import '../../../common/widgets/back_arrow_widget.dart';
 import '../../../generated/l10n.dart';
 import '../../showcase/widgets/purchase_widget.dart';
@@ -45,8 +43,7 @@ class HistoryOrdersPage extends ConsumerWidget {
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                             )
-                          : disableIndicator(
-                              child: ListView.separated(
+                          : ListView.separated(
                                 itemBuilder: (context, index) {
                                   var purchase = snapshot.data![index];
                                   return PurchaseWidget(purchase: purchase);
@@ -54,8 +51,7 @@ class HistoryOrdersPage extends ConsumerWidget {
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(height: 8),
                                 itemCount: snapshot.data!.length,
-                              ),
-                            );
+                              );
                 },
               ),
             ),

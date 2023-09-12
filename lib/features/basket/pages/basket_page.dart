@@ -1,4 +1,5 @@
 import 'package:deliverly_app/common/app_settings/app_settings.dart';
+import 'package:deliverly_app/features/basket/pages/checkout_page.dart';
 import 'package:deliverly_app/features/basket/repository/total_price_state.dart';
 import 'package:deliverly_app/models/date_and_time.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import '../repository/basket_state.dart';
 import '../widgets/basket_product_card.dart';
 
 class BasketPage extends ConsumerStatefulWidget {
-
   const BasketPage({
     Key? key,
   }) : super(key: key);
@@ -21,20 +21,14 @@ class BasketPage extends ConsumerStatefulWidget {
 }
 
 class _BasketPageState extends ConsumerState<BasketPage> {
-  DateAndTime? dateAndTime;
-
   void buyProducts() async {
-    if (ref.watch(appSettingsProvider).user != null) {
-      if (ref.read(basketProvider).isNotEmpty) {
-        ref.read(basketProvider.notifier).buyProducts(
-              context: context,
-              dateAndTime: dateAndTime!,
-            );
-        showSnakeBar(context, S.of(context).thank_purchase);
-      }
-    } else {
+    if (ref.watch(appSettingsProvider).user == null) {
       showSnakeBar(context, S.of(context).enter_information);
+      return;
     }
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CheckoutPage()));
   }
 
   void _deleteProductFromBasket({required String id}) async {
@@ -70,8 +64,7 @@ class _BasketPageState extends ConsumerState<BasketPage> {
                 textAlign: TextAlign.center,
               ),
             )
-          : disableIndicator(
-              child: ListView.separated(
+          : ListView.separated(
                 shrinkWrap: true,
                 itemCount: ref.read(basketProvider).length,
                 separatorBuilder: (context, index) =>
@@ -85,8 +78,7 @@ class _BasketPageState extends ConsumerState<BasketPage> {
                   );
                 },
               ),
-            ),
-      bottomNavigationBar: ref.watch(totalPriceProvider) == 0
+      bottomNavigationBar: ref.watch(totalPriceProvider) == 0.0
           ? null
           : Container(
               height: 50,
@@ -97,14 +89,19 @@ class _BasketPageState extends ConsumerState<BasketPage> {
                 ),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                      '${S.of(context).to_pay} ${ref.watch(totalPriceProvider)} руб.'),
+                  Flexible(
+                    flex: 1,
+                    child: Text(
+                      '${S.of(context).to_pay} ${ref.watch(totalPriceProvider).toStringAsFixed(1)} руб.',
+                      overflow: TextOverflow.visible,
+                    ),
+                  ),
                   ElevatedButton(
                     onPressed: () => buyProducts(),
-                    child: Text(
-                      S.of(context).pay,
+                    child: const Text(
+                      'Delivery clearance',
                       textAlign: TextAlign.center,
                     ),
                   )

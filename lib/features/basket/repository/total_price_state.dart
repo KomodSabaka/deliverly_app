@@ -1,23 +1,25 @@
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
 import 'package:deliverly_app/features/basket/repository/basket_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final totalPriceProvider = StateNotifierProvider<TotalPriceNotifier, int>(
+final totalPriceProvider = StateNotifierProvider<TotalPriceNotifier, double>(
     (ref) => TotalPriceNotifier(ref: ref));
 
-class TotalPriceNotifier extends StateNotifier<int> {
-  TotalPriceNotifier({required this.ref}) : super(0);
+class TotalPriceNotifier extends StateNotifier<double> {
+  TotalPriceNotifier({required this.ref}) : super(0.0);
 
-  final StateNotifierProviderRef<TotalPriceNotifier, int> ref;
+  final StateNotifierProviderRef<TotalPriceNotifier, double> ref;
 
   void calculate() {
     try {
-      var cost = 0;
+      double cost = 0.0;
 
       for (var element in ref.watch(basketProvider)) {
-        cost += int.parse(element.cost);
+        cost += element.cost;
       }
-
-      state = cost;
+      state = ref
+          .read(appSettingsProvider.notifier)
+          .calculateInUsersCurrency(costInDollars: cost);
     } on Exception catch (e) {
       print(e);
     }

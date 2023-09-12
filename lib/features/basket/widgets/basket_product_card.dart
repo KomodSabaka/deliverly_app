@@ -1,3 +1,5 @@
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
+import 'package:deliverly_app/common/utils/utils.dart';
 import 'package:deliverly_app/models/item_in_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +57,7 @@ class _BasketProductCardState extends ConsumerState<BasketProductCard> {
                         overflow: TextOverflow.fade,
                       ),
                       Text(
-                        '${widget.product.price} руб.',
+                        '${ref.watch(appSettingsProvider.notifier).calculateInUsersCurrency(costInDollars: widget.product.price).toStringAsFixed(1)} руб.',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -66,7 +68,7 @@ class _BasketProductCardState extends ConsumerState<BasketProductCard> {
                 children: [
                   Text('${widget.product.count} шт.'),
                   Text(
-                    '${S.of(context).total_cost}\n${widget.product.cost} руб.',
+                    '${S.of(context).total_cost}\n${ref.watch(appSettingsProvider.notifier).calculateInUsersCurrency(costInDollars: widget.product.cost).toStringAsFixed(1)} руб.',
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),

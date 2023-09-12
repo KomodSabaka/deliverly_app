@@ -1,5 +1,4 @@
 import 'package:deliverly_app/common/navigation/routes.dart';
-import 'package:deliverly_app/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'common/app_settings/app_settings.dart';
@@ -34,18 +33,22 @@ class _StoreLayoutState extends ConsumerState<StoreLayout> {
         duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
   }
 
-  void _haveSellerData() {
-    var user = ref.watch(appSettingsProvider).user;
-    if (user == null && user is Seller) {
+  void _createProduct() {
+    if (ref.watch(appSettingsProvider).user == null) {
       showSnakeBar(context, S.of(context).enter_description_company);
     } else {
-      Navigator.pushNamed(context, AppRoutes.createProductPage);
+      Navigator.pushNamed(
+        context,
+        AppRoutes.createProductPage,
+        arguments: {
+          'isRefactoring': false,
+        },
+      );
     }
   }
 
   void _getProductsFromDB() async {
-    var isClientMode = ref.watch(appSettingsProvider.notifier).isClientMode;
-    if (isClientMode) {
+    if (ref.watch(appSettingsProvider.notifier).isClientMode) {
       await ref.read(basketProvider.notifier).getProductsFromDB();
     }
   }
@@ -77,8 +80,7 @@ class _StoreLayoutState extends ConsumerState<StoreLayout> {
     var isClientMode = ref.watch(appSettingsProvider.notifier).isClientMode;
     return Scaffold(
       body: SafeArea(
-        child: disableIndicator(
-          child: PageView(
+        child: PageView(
             controller: _pageController,
             onPageChanged: (index) {
               setState(() => currentIndex = index);
@@ -89,7 +91,6 @@ class _StoreLayoutState extends ConsumerState<StoreLayout> {
               const SettingPage(),
             ],
           ),
-        ),
       ),
       bottomNavigationBar: isClientMode
           ? ClientBottomBar(
@@ -106,7 +107,7 @@ class _StoreLayoutState extends ConsumerState<StoreLayout> {
           : currentIndex == 0
               ? FloatingActionButton(
                   backgroundColor: backgroundColorSelectModePage,
-                  onPressed: _haveSellerData,
+                  onPressed: _createProduct,
                   child: const Icon(Icons.add),
                 )
               : null,

@@ -20,6 +20,7 @@ class SellerBottomBar extends StatefulWidget {
 class _SellerBottomBarState extends State<SellerBottomBar> {
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Container(
       height: 80,
       width: double.infinity,
@@ -33,7 +34,7 @@ class _SellerBottomBarState extends State<SellerBottomBar> {
         children: [
           SizedBox(
             height: 80,
-            width: MediaQuery.of(context).size.width / 2,
+            width: size.width / 2,
             child: InkWell(
               onTap: () {
                 widget.setIndex(0);
@@ -49,7 +50,7 @@ class _SellerBottomBarState extends State<SellerBottomBar> {
           ),
           SizedBox(
             height: 80,
-            width: MediaQuery.of(context).size.width / 2,
+            width: size.width / 2,
             child: InkWell(
               onTap: () {
                 widget.setIndex(1);

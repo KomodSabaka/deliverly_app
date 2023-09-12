@@ -23,99 +23,108 @@ class ClientCardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading:  BackArrowWidget(onPressed: () => Navigator.pop(context),),
+        leading: BackArrowWidget(
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(color: borderColor),
-                borderRadius: BorderRadius.circular(10),
-                gradient: const LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.topLeft,
-                  stops: [
-                    0.3,
-                    0.6,
-                    0.9,
-                  ],
-                  colors: [
-                    Colors.green,
-                    Colors.greenAccent,
-                    Colors.green,
-                  ],
-                ),
-              ),
+      body: LayoutBuilder(
+        builder: (context, constraints) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  InputFieldWidget(
-                    hintText: S.of(context).num_card,
-                    controller: cardNumberController,
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  SizedBox(
-                    width: 200,
-                    child: InputFieldWidget(
-                      hintText: S.of(context).name,
-                      controller: cardNameController,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        width: 100,
-                        child: InputFieldWidget(
-                          hintText: S.of(context).date,
-                          controller: cardDateController,
-                          keyboardType: TextInputType.datetime,
-                        ),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    width: constraints.maxWidth >= 600 ? 600 : size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: borderColor),
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.topLeft,
+                        stops: [
+                          0.3,
+                          0.6,
+                          0.9,
+                        ],
+                        colors: [
+                          Colors.green,
+                          Colors.greenAccent,
+                          Colors.green,
+                        ],
                       ),
-                      Container(
-                        alignment: Alignment.center,
-                        width: 100,
-                        child: InputFieldWidget(
-                          hintText: S.of(context).rcv,
-                          controller: cardRCVController,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputFieldWidget(
+                          hintText: S.of(context).num_card,
+                          controller: cardNumberController,
                           keyboardType: TextInputType.number,
                         ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        SizedBox(
+                          width: 200,
+                          child: InputFieldWidget(
+                            hintText: S.of(context).name,
+                            controller: cardNameController,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              width: 100,
+                              child: InputFieldWidget(
+                                hintText: S.of(context).date,
+                                controller: cardDateController,
+                                keyboardType: TextInputType.datetime,
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              width: 100,
+                              child: InputFieldWidget(
+                                hintText: S.of(context).rcv,
+                                controller: cardRCVController,
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      saveCard();
+                      Navigator.pop(context);
+                    },
+                    child: SizedBox(
+                      width: constraints.maxWidth >= 800 ? size.width * 0.1 : 100,
+                      child: Text(
+                        S.of(context).save_card,
+                        textAlign: TextAlign.center,
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                saveCard();
-                Navigator.pop(context);
-              },
-              child: SizedBox(
-                width: 100,
-                child: Text(
-                  S.of(context).save_card,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

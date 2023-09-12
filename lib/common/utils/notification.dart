@@ -21,25 +21,23 @@ class NotificationService {
     required int id,
     required String title,
     required String body,
-    required DateAndTime dateAndTime,
+    //required DateAndTime dateAndTime,
   }) async {
-    print(dateAndTime);
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: id,
         channelKey: 'basic_channel',
         title: title,
-        body: body,
       ),
-      schedule: NotificationCalendar(
-        year: dateAndTime.year,
-        month: dateAndTime.month,
-        day: dateAndTime.day,
-        hour: dateAndTime.hour,
-        minute: dateAndTime.minute,
-        second: 0,
-        millisecond: 0,
-      ),
+      // schedule: NotificationCalendar(
+      //   year: dateAndTime.year,
+      //   month: dateAndTime.month,
+      //   day: dateAndTime.day,
+      //   hour: dateAndTime.hour,
+      //   minute: dateAndTime.minute,
+      //   second: 0,
+      //   millisecond: 0,
+      // ),
     );
   }
 }

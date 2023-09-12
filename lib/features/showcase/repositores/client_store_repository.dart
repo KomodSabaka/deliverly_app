@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:deliverly_app/features/showcase/repositores/abstract_store_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,7 +11,9 @@ final clientStoreRepository = Provider((ref) => ClientStoreRepository(
       firebaseFirestore: FirebaseFirestore.instance,
     ));
 
-class ClientStoreRepository {
+
+
+class ClientStoreRepository extends StoreRepository{
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
 
@@ -19,6 +22,7 @@ class ClientStoreRepository {
     required this.firebaseFirestore,
   });
 
+  @override
   Stream<List<Product>> getProducts() {
     return firebaseFirestore
         .collection(FirebaseFields.products)
@@ -34,7 +38,8 @@ class ClientStoreRepository {
     );
   }
 
-  Stream<List<Product>> searchProducts({
+  @override
+  Stream<List<Product>> searchProduct({
     required String text,
   }) {
     return firebaseFirestore

@@ -1,10 +1,10 @@
-import 'package:deliverly_app/common/navigation/routes.dart';
 import 'package:deliverly_app/common/utils/notification.dart';
 import 'package:deliverly_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'common/navigation/routes.dart';
 import 'common/theme/app_theme.dart';
 import 'generated/l10n.dart';
 
@@ -13,8 +13,17 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   NotificationService().initialize();
   runApp(const MyApp());
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -37,7 +46,13 @@ class MyApp extends StatelessWidget {
           Locale('en'),
         ],
         onGenerateRoute: (settings) => AppRoutes.generateRoute(settings),
-        initialRoute: AppRoutes.selectModePage,
+        // initialRoute: AppRoutes.selectModePage,
+        builder: (context, child) {
+          return ScrollConfiguration(
+            behavior: MyBehavior(),
+            child: child!,
+          );
+        },
       ),
     );
   }

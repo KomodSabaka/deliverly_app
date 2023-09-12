@@ -31,3 +31,4 @@ class AppImage {
   static const emptyAvatar = 'assets/empty_avatar.png';
   static const vector = 'assets/Vector.svg';
 }
+

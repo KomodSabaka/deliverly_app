@@ -1,8 +1,10 @@
-import 'package:deliverly_app/common/navigation/routes.dart';
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
+import 'package:deliverly_app/common/enums/mode_enum.dart';
 import 'package:deliverly_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../../../common/navigation/routes.dart';
 import '../../../generated/l10n.dart';
 import '../widgets/auth_background.dart';
 
@@ -30,6 +32,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
             userOTP: value,
           )
           .whenComplete(() async {
+            Navigator.pop(context);
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppRoutes.storeLayout,

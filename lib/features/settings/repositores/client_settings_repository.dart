@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,22 +10,24 @@ import '../../../models/user.dart';
 final clientSettingRepository = Provider((ref) => ClientSettingRepository(
       firebaseAuth: FirebaseAuth.instance,
       firebaseFirestore: FirebaseFirestore.instance,
+      ref: ref,
     ));
 
 class ClientSettingRepository {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
+  final ProviderRef ref;
 
   ClientSettingRepository({
     required this.firebaseAuth,
     required this.firebaseFirestore,
+    required this.ref,
   });
 
-  Future changeUser({
+  Future changeClient({
     required String name,
     required String phone,
     required PayCard card,
-    required File? photo,
   }) async {
     try {
       String uid = firebaseAuth.currentUser!.uid;

@@ -14,7 +14,7 @@ class SearchInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    var textField = TextField(
       controller: controller,
       style: Theme.of(context).textTheme.bodyLarge,
       cursorColor: secondaryTextColor,
@@ -25,7 +25,7 @@ class SearchInputWidget extends StatelessWidget {
         hintStyle: Theme.of(context).textTheme.bodyLarge,
         prefixIcon: Padding(
           padding:
-              const EdgeInsets.only(top: 12.0, bottom: 12, left: 22, right: 16),
+          const EdgeInsets.only(top: 12.0, bottom: 12, left: 22, right: 16),
           child: SvgPicture.asset(AppImage.search),
         ),
         focusedBorder: OutlineInputBorder(
@@ -49,6 +49,19 @@ class SearchInputWidget extends StatelessWidget {
               color: borderColor,
             )),
       ),
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 600) {
+          return SizedBox(
+            width: 600,
+            child: textField,
+          );
+        } else {
+          return textField;
+        }
+      }
     );
   }
 }

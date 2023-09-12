@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,18 +12,21 @@ import '../../../models/user.dart';
 final sellerSettingRepository = Provider((ref) => SellerSettingRepository(
       firebaseAuth: FirebaseAuth.instance,
       firebaseFirestore: FirebaseFirestore.instance,
+      ref: ref,
     ));
 
 class SellerSettingRepository {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
+  final ProviderRef ref;
 
   SellerSettingRepository({
     required this.firebaseAuth,
     required this.firebaseFirestore,
+    required this.ref,
   });
 
- Future changeCompany({
+  Future changeCompany({
     required String name,
     required String description,
     required File? photo,
@@ -49,6 +53,8 @@ class SellerSettingRepository {
           .collection(FirebaseFields.seller)
           .doc(uid)
           .set(seller.toMap());
+
+      ref.watch(appSettingsProvider.notifier).setUser(user: seller);
     } catch (e, s) {
       print(s);
     }

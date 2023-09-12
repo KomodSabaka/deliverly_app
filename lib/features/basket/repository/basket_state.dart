@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:deliverly_app/common/utils/notification.dart';
-import 'package:deliverly_app/models/date_and_time.dart';
 import 'package:deliverly_app/models/item_in_cart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +27,8 @@ class Basket extends StateNotifier<List<ItemInCart>> {
     required int count,
   }) async {
     ItemInCart selectedProduct = ItemInCart(
-      count.toString(),
-      (count * int.parse(product.price)).toString(),
+      count,
+      count * product.price,
       id: product.id,
       sellerId: product.sellerId,
       name: product.name,
@@ -59,7 +58,6 @@ class Basket extends StateNotifier<List<ItemInCart>> {
 
   void buyProducts({
     required BuildContext context,
-    required DateAndTime dateAndTime,
   }) async {
     List<Product> basketList = state;
     state = [];
@@ -87,17 +85,8 @@ class Basket extends StateNotifier<List<ItemInCart>> {
       id: 10,
       title: S.of(context).thank_purchase,
       body: S.of(context).thank_purchase,
-      dateAndTime: dateAndTime,
+      // dateAndTime: dateAndTime,
     );
-  }
-
-  int getSum() {
-    int sum = 0;
-
-    for (var element in state) {
-      sum += int.parse(element.cost);
-    }
-    return sum;
   }
 
   Future getProductsFromDB() async {

@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:deliverly_app/models/product.dart';
 
 class ItemInCart extends Product {
-  final String count;
-  final String cost;
+  final int count;
+  final double cost;
 
   ItemInCart(
     this.count,
@@ -12,7 +12,7 @@ class ItemInCart extends Product {
     required String id,
     required String sellerId,
     required String name,
-    required String price,
+    required double price,
     required String image,
   }) : super(
           id: id,
@@ -23,6 +23,7 @@ class ItemInCart extends Product {
           image: image,
         );
 
+  @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
     map.remove('description');
@@ -33,17 +34,17 @@ class ItemInCart extends Product {
 
   static ItemInCart fromMap(Map<String, dynamic> map) {
     return ItemInCart(
-      map['count'],
-      map['cost'],
+      int.parse(map['count'].toString()) ?? 0,
+      double.parse(map['cost'].toString())?? 0.0,
       id: map['id'],
       sellerId: map['sellerId'],
       name: map['name'],
-      price: map['price'],
+      price: double.parse(map['price'].toString()),
       image: map['image'],
-
     );
   }
 
+  @override
   String toJson() => json.encode(toMap());
 
   factory ItemInCart.fromJson(String source) =>

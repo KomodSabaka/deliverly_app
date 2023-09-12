@@ -63,8 +63,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Введите описание компании"),
         "enter_company_name":
             MessageLookupByLibrary.simpleMessage("Введите название компании"),
-        "enter_cost_in_rub": MessageLookupByLibrary.simpleMessage(
-            "Введите стоимость продукта в рублях"),
+        "enter_cost_in_usd": MessageLookupByLibrary.simpleMessage(
+            "Введите стоимость продукта в долларах"),
         "enter_date_card":
             MessageLookupByLibrary.simpleMessage("Введите дату карты"),
         "enter_description_company":

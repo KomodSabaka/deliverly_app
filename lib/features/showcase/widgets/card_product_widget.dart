@@ -1,11 +1,13 @@
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/constants.dart';
 
-class CardProductWidget extends StatefulWidget {
+class CardProductWidget extends ConsumerStatefulWidget {
   final String image;
   final String name;
-  final String price;
+  final double price;
 
   const CardProductWidget({
     Key? key,
@@ -15,15 +17,13 @@ class CardProductWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CardProductWidget> createState() => _CardProductWidgetState();
+  ConsumerState<CardProductWidget> createState() => _CardProductWidgetState();
 }
 
-class _CardProductWidgetState extends State<CardProductWidget> {
+class _CardProductWidgetState extends ConsumerState<CardProductWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 211,
-      width: 177,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
@@ -33,22 +33,18 @@ class _CardProductWidgetState extends State<CardProductWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            children: [
-              Container(
-                width: 177,
-                height: 140,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(8),
-                  ),
-                  image: DecorationImage(
-                    image: NetworkImage(widget.image),
-                    fit: BoxFit.cover,
-                  ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(8),
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(widget.image),
+                  fit: BoxFit.cover,
                 ),
               ),
-            ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -62,9 +58,9 @@ class _CardProductWidgetState extends State<CardProductWidget> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16.0, bottom: 12),
             child: Text(
-              '${widget.price} руб.',
+              '${ref.watch(appSettingsProvider.notifier).calculateInUsersCurrency(costInDollars: widget.price).toStringAsFixed(1)} руб.',
               overflow: TextOverflow.ellipsis,
               style:
                   Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),

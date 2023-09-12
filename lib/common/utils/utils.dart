@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,15 +24,6 @@ void showSnakeBar(BuildContext context, String text) {
   );
 }
 
-Widget disableIndicator({required Widget child}) {
-  return NotificationListener<OverscrollIndicatorNotification>(
-    onNotification: (overScroll) {
-      overScroll.disallowIndicator();
-      return true;
-    },
-    child: child,
-  );
-}
 
 Future<File?> pickImage(BuildContext context) async {
   File? image;
@@ -105,4 +96,10 @@ void phoneNumberFormat({
 
   controller.selection =
       TextSelection.collapsed(offset: controller.text.length);
+}
+
+Future<bool> checkInternetConnection() async {
+  final connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) return false;
+  return true;
 }

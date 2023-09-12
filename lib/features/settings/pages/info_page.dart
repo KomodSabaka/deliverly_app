@@ -52,16 +52,20 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
     } else if (image == null && ref.watch(appSettingsProvider).user == null) {
       showSnakeBar(context, S.of(context).add_pic_company);
     } else {
-      await ref.read(sellerSettingsController).changeCompany(
+      await ref
+          .read(sellerSettingsController)
+          .changeCompany(
             name: _nameController.text,
             description: _phoneOrDescriptionController.text,
             photo: image!,
+          )
+          .whenComplete(
+            () => Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.storeLayout,
+              (route) => false,
+            ),
           );
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRoutes.storeLayout,
-        (route) => false,
-      );
     }
   }
 
@@ -74,18 +78,24 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
       showSnakeBar(context, S.of(context).add_card);
     } else {
       if (isAnon) {
+        ref.read(appSettingsProvider.notifier).createClient(
+            name: _nameController.text,
+            phoneNumber: _phoneOrDescriptionController.text,
+            card: card!);
         ref.read(authController).signUp(
               context: context,
               phoneNumber: _phoneOrDescriptionController.text,
               mode: ModeEnum.client,
             );
       } else {
-        await ref.read(clientSettingsController).changeUser(
+        await ref
+            .read(clientSettingsController)
+            .changeClient(
               name: _nameController.text,
               phone: _phoneOrDescriptionController.text,
               card: card!,
-              photo: image!,
-            );
+            )
+            .whenComplete(() => showSnakeBar(context, 'Data saved'));
       }
     }
   }
@@ -162,6 +172,7 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
   Widget build(BuildContext context) {
     var isClientMode = ref.watch(appSettingsProvider.notifier).isClientMode;
     var user = ref.watch(appSettingsProvider).user;
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         leading: BackArrowWidget(
@@ -170,148 +181,146 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: disableIndicator(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text(
-                  isClientMode
-                      ? S.of(context).editing_user_information
-                      : S.of(context).editing_store_information,
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(
                 isClientMode
-                    ? const SizedBox()
-                    : Stack(
-                        alignment: Alignment.centerRight,
-                        children: [
-                          Container(
-                            height: 150,
-                            width: 150,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: borderColor),
-                              borderRadius: BorderRadius.circular(10),
+                    ? S.of(context).editing_user_information
+                    : S.of(context).editing_store_information,
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              isClientMode
+                  ? const SizedBox()
+                  : Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        Container(
+                          height: 150,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: borderColor),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: image != null
+                              ? Image.file(
+                                  image!,
+                                  fit: BoxFit.cover,
+                                )
+                              : user != null && user is Seller
+                                  ? Image.network(
+                                      user.photo!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const SizedBox(),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () => setState(() => image = null),
+                              icon: const Icon(
+                                Icons.delete,
+                                size: 45,
+                                color: primaryButtonColor,
+                              ),
                             ),
-                            child: image != null
-                                ? Image.file(
-                                    image!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : user != null && user is Seller
-                                    ? Image.network(
-                                        user.photo!,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : const SizedBox(),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                onPressed: () => setState(() => image = null),
-                                icon: const Icon(
-                                  Icons.delete,
-                                  size: 45,
-                                  color: primaryButtonColor,
-                                ),
+                            const SizedBox(height: 50),
+                            IconButton(
+                              onPressed: _selectImage,
+                              icon: const Icon(
+                                Icons.add,
+                                size: 45,
+                                color: primaryButtonColor,
                               ),
-                              const SizedBox(height: 50),
-                              IconButton(
-                                onPressed: _selectImage,
-                                icon: const Icon(
-                                  Icons.add,
-                                  size: 45,
-                                  color: primaryButtonColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                const SizedBox(height: 24),
-                InputFieldWidget(
-                  hintText: isClientMode
-                      ? S.of(context).how_call_you
-                      : S.of(context).enter_name_company,
-                  controller: _nameController,
-                ),
-                const SizedBox(height: 14),
-                isClientMode
-                    ? InputFieldWidget(
-                        hintText: S.of(context).enter_phone_number,
-                        controller: _phoneOrDescriptionController,
-                        maxLength: 16,
-                        keyboardType: TextInputType.phone,
-                        onChanged: (value) => phoneNumberFormat(
-                          value: value,
-                          controller: _phoneOrDescriptionController,
+                            ),
+                          ],
                         ),
-                      )
-                    : InputFieldWidget(
-                        hintText: S.of(context).enter_description_company,
+                      ],
+                    ),
+              const SizedBox(height: 24),
+              InputFieldWidget(
+                hintText: isClientMode
+                    ? S.of(context).how_call_you
+                    : S.of(context).enter_name_company,
+                controller: _nameController,
+              ),
+              const SizedBox(height: 14),
+              isClientMode
+                  ? InputFieldWidget(
+                      hintText: S.of(context).enter_phone_number,
+                      controller: _phoneOrDescriptionController,
+                      maxLength: 16,
+                      keyboardType: TextInputType.phone,
+                      onChanged: (value) => phoneNumberFormat(
+                        value: value,
                         controller: _phoneOrDescriptionController,
-                        maxLine: null,
                       ),
-                const SizedBox(height: 24),
-                isClientMode
-                    ? ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.clientCardPage,
-                            arguments: {
-                              'cardNumberController': _cardNumberController,
-                              'cardNameController': _cardNameController,
-                              'cardDateController': _cardDateController,
-                              'cardRCVController': _cardRCVController,
-                              'saveCard': saveCard,
-                            },
-                          );
-                        },
-                        child: SizedBox(
-                          width: 100,
-                          child: Text(
-                            S.of(context).add_card_for_payment,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
-                isClientMode ? const SizedBox(height: 24) : const SizedBox(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton(
+                    )
+                  : InputFieldWidget(
+                      hintText: S.of(context).enter_description_company,
+                      controller: _phoneOrDescriptionController,
+                      maxLine: null,
+                    ),
+              const SizedBox(height: 24),
+              isClientMode
+                  ? ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.clientCardPage,
+                          arguments: {
+                            'cardNumberController': _cardNumberController,
+                            'cardNameController': _cardNameController,
+                            'cardDateController': _cardDateController,
+                            'cardRCVController': _cardRCVController,
+                            'saveCard': saveCard,
+                          },
+                        );
                       },
                       child: SizedBox(
-                        width: 100,
+                        width: size.width * 0.3,
                         child: Text(
-                          S.of(context).back,
+                          S.of(context).add_card_for_payment,
                           textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: isClientMode ? _saveUser : _saveCompany,
-                      child: SizedBox(
-                        width: 100,
-                        child: Text(
-                          isAnon
-                              ? S.of(context).confirm_phone_num
-                              : S.of(context).change,
-                          textAlign: TextAlign.center,
-                        ),
+                    )
+                  : const SizedBox(),
+              isClientMode ? const SizedBox(height: 24) : const SizedBox(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: SizedBox(
+                      width: size.width * 0.3,
+                      child: Text(
+                        S.of(context).back,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  ElevatedButton(
+                    onPressed: isClientMode ? _saveUser : _saveCompany,
+                    child: SizedBox(
+                      width: size.width * 0.3,
+                      child: Text(
+                        isAnon
+                            ? S.of(context).confirm_phone_num
+                            : S.of(context).change,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

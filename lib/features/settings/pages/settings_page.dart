@@ -7,7 +7,6 @@ import '../../../common/utils/constants.dart';
 import '../../../generated/l10n.dart';
 
 class SettingPage extends ConsumerStatefulWidget {
-
   const SettingPage({
     Key? key,
   }) : super(key: key);
@@ -17,7 +16,6 @@ class SettingPage extends ConsumerStatefulWidget {
 }
 
 class _SellerSettingPageState extends ConsumerState<SettingPage> {
-
   @override
   Widget build(BuildContext context) {
     var isClientMode = ref.watch(appSettingsProvider.notifier).isClientMode;
@@ -62,26 +60,26 @@ class _SellerSettingPageState extends ConsumerState<SettingPage> {
             ),
             isClientMode
                 ? TextButton(
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.historyPage,
-                );
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.history,
-                    color: primaryTextColor,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    S.of(context).purchase_history,
-                  ),
-                ],
-              ),
-            )
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.historyPage,
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.history,
+                          color: primaryTextColor,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          S.of(context).purchase_history,
+                        ),
+                      ],
+                    ),
+                  )
                 : const SizedBox(),
           ],
         ),

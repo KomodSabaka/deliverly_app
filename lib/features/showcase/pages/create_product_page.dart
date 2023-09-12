@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:deliverly_app/features/showcase/controllers/seller_store_controller.dart';
+import 'package:deliverly_app/features/showcase/controllers/showcase_controller.dart';
 import 'package:deliverly_app/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,18 +50,19 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
       showSnakeBar(context, S.of(context).add_cost_product);
     } else {
       if (widget.isRefactoring) {
-        ref.read(sellerStoreController).refactorProduct(
+        ref.read(showCaseController).refactorProduct(
               product: widget.product!,
               name: _nameController.text,
-              price: _priceController.text,
+              price:  double.parse(_priceController.text),
               description: _descriptionController.text,
               image: image,
             );
+
         Navigator.pop(context);
       } else {
-        ref.read(sellerStoreController).addProducts(
+        ref.read(showCaseController).addProducts(
               name: _nameController.text,
-              price: _priceController.text,
+              price: double.parse(_priceController.text),
               description: _descriptionController.text,
               image: image!,
             );
@@ -78,7 +79,7 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
     if (widget.isRefactoring) {
       _nameController.text = widget.product!.name;
       _descriptionController.text = widget.product!.description;
-      _priceController.text = widget.product!.price;
+      _priceController.text = widget.product!.price.toString();
     }
     super.initState();
   }
@@ -175,7 +176,7 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
               ),
               const SizedBox(height: 24),
               InputFieldWidget(
-                hintText: S.of(context).enter_cost_in_rub,
+                hintText: S.of(context).enter_cost_in_usd,
                 controller: _priceController,
                 keyboardType: TextInputType.number,
               ),

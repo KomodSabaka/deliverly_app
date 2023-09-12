@@ -44,7 +44,7 @@
   "new_product": "Новый продукт",
   "enter_name_product": "Введите название продукта",
   "enter_description_product": "Введите описание продукта",
-  "enter_cost_in_rub": "Введите стоимость продукта в рублях",
+  "enter_cost_in_usd": "Введите стоимость продукта в долларах",
   "add": "Добавть",
   "add_to_basket": "Добавить в корзину",
   "delete_product": "Удалить товар",

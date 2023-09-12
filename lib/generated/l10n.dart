@@ -500,11 +500,11 @@ class S {
     );
   }
 
-  /// `Enter product cost in rubles`
-  String get enter_cost_in_rub {
+  /// `Enter product cost in dollars`
+  String get enter_cost_in_usd {
     return Intl.message(
-      'Enter product cost in rubles',
-      name: 'enter_cost_in_rub',
+      'Enter product cost in dollars',
+      name: 'enter_cost_in_usd',
       desc: '',
       args: [],
     );

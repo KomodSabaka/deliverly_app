@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:deliverly_app/features/showcase/repositores/abstract_store_repository.dart';
 import 'package:deliverly_app/models/product.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,18 +16,18 @@ final sellerStoreRepository = Provider((ref) => SellerStoreRepository(
       firebaseFirestore: FirebaseFirestore.instance,
     ));
 
-class SellerStoreRepository {
+class SellerStoreRepository extends StoreRepository {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
 
-  const SellerStoreRepository({
+  SellerStoreRepository({
     required this.firebaseAuth,
     required this.firebaseFirestore,
   });
 
   void addProducts({
     required String name,
-    required String price,
+    required double price,
     required String description,
     required File image,
   }) async {
@@ -56,7 +58,7 @@ class SellerStoreRepository {
   void refactorProduct({
     required Product product,
     required String name,
-    required String price,
+    required double price,
     required String description,
     required File? image,
   }) async {
@@ -88,8 +90,10 @@ class SellerStoreRepository {
 
   void deleteProduct({
     required String productId,
+    required String imagePath,
   }) async {
     try {
+      FirebaseStorage.instance.ref().child(imagePath).delete();
       await firebaseFirestore
           .collection(FirebaseFields.products)
           .doc(productId)
@@ -99,6 +103,7 @@ class SellerStoreRepository {
     }
   }
 
+  @override
   Stream<List<Product>> searchProduct({
     required String text,
   }) {
@@ -124,7 +129,8 @@ class SellerStoreRepository {
   }
 
 
-  Stream<List<Product>> getProductsCompany() {
+  @override
+  Stream<List<Product>> getProducts() {
     String companyId = firebaseAuth.currentUser!.uid;
     return firebaseFirestore
         .collection(FirebaseFields.products)

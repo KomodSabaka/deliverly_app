@@ -4,7 +4,7 @@ class Product {
   final String id;
   final String sellerId;
   final String name;
-  final String price;
+  final double price;
   final String description;
   final String image;
 
@@ -21,7 +21,7 @@ class Product {
     String? id,
     String? sellerId,
     String? name,
-    String? price,
+    double? price,
     String? description,
     String? image,
   }) {
@@ -48,12 +48,12 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['id'] ?? '',
-      sellerId: map['sellerId'] ?? '',
-      name: map['name'] ?? '',
-      price: map['price'] ?? '',
-      description: map['description'] ?? '',
-      image: map['image'] ?? '',
+      id: map['id'],
+      sellerId: map['sellerId'],
+      name: map['name'] ,
+      price: double.parse(map['price'].toString()),
+      description: map['description'] ,
+      image: map['image'],
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
 import 'package:deliverly_app/common/navigation/routes.dart';
 import 'package:deliverly_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,15 +10,18 @@ import '../../../common/utils/constants.dart';
 final authRepository = Provider((ref) => AuthRepository(
       firebaseAuth: FirebaseAuth.instance,
       firebaseFirestore: FirebaseFirestore.instance,
+      ref: ref,
     ));
 
 class AuthRepository  {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
+  final ProviderRef ref;
 
   AuthRepository({
     required this.firebaseAuth,
     required this.firebaseFirestore,
+    required this.ref,
   });
 
   void signSeller({
@@ -58,7 +62,7 @@ class AuthRepository  {
           await firebaseAuth.signInWithCredential(credential);
         },
         verificationFailed: (e) {
-          throw Exception(e);
+          ref.read(appSettingsProvider.notifier).setUser(user: null);
         },
         codeSent: ((String verificationId, int? resendToken) async {
           Navigator.pushNamed(

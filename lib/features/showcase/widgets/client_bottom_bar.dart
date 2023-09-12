@@ -18,6 +18,7 @@ class ClientBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Container(
       height: 80,
       alignment: Alignment.center,
@@ -29,7 +30,7 @@ class ClientBottomBar extends StatelessWidget {
         children: [
           SizedBox(
             height: 80,
-            width: MediaQuery.of(context).size.width / 3,
+            width: size.width / 3,
             child: InkWell(
               onTap: () => setIndex(0),
               child: SvgPicture.asset(
@@ -41,13 +42,14 @@ class ClientBottomBar extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 80,
-            width: MediaQuery.of(context).size.width / 3,
-            child: InkWell(
-              onTap: () => setIndex(1),
+          InkWell(
+            onTap: () => setIndex(1),
+            child: Container(
+              height: 80,
+              width: size.width / 3,
+              alignment: Alignment.center,
               child: Stack(
-                alignment: Alignment.center,
+                alignment: Alignment.bottomLeft,
                 children: [
                   SvgPicture.asset(
                     AppImage.shoppingCart,
@@ -57,23 +59,19 @@ class ClientBottomBar extends StatelessWidget {
                         : secondaryTextColor,
                   ),
                   basketLength != 0
-                      ? Positioned(
-                          top: 42,
-                          left: 70,
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 14,
-                            width: 14,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
-                            ),
-                            child: Text(
-                              basketLength.toString(),
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        )
+                      ? Container(
+                        alignment: Alignment.center,
+                        height: 14,
+                        width: 14,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                        child: Text(
+                          basketLength.toString(),
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      )
                       : const SizedBox(),
                 ],
               ),
@@ -81,7 +79,7 @@ class ClientBottomBar extends StatelessWidget {
           ),
           SizedBox(
             height: 80,
-            width: MediaQuery.of(context).size.width / 3,
+            width: size.width / 3,
             child: InkWell(
               onTap: () => setIndex(2),
               child: SvgPicture.asset(
