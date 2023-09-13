@@ -6,19 +6,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 
-import 'constants.dart';
+import '../constants/app_palette.dart';
 
 void showSnakeBar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       duration: const Duration(seconds: 1),
-      backgroundColor: backgroundColorSelectModePage,
+      backgroundColor: AppPalette.backgroundColorSelectModePage,
       content: Text(
         text,
         style: Theme.of(context)
             .textTheme
             .bodyLarge!
-            .copyWith(color: backdropColor),
+            .copyWith(color: AppPalette.backdropColor),
       ),
     ),
   );

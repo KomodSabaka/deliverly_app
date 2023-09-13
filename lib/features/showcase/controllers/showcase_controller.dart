@@ -26,7 +26,7 @@ class ShowCaseController {
   });
 
 
-  Stream<List<Product>> getProducts() {
+  Future<void> getProducts() {
     switch(ref.watch(appSettingsProvider).mode) {
       case ModeEnum.client:
         return clientStoreRepository.getProducts();
@@ -36,7 +36,7 @@ class ShowCaseController {
     }
   }
 
-  Stream<List<Product>> searchProduct({
+  Future<void> searchProduct({
     required String text,
   }) {
     switch(ref.watch(appSettingsProvider).mode) {
@@ -48,13 +48,13 @@ class ShowCaseController {
     }
   }
 
-  void addProducts({
+  Future<void> addProducts({
     required String name,
     required double price,
     required String description,
     required File image,
   }) {
-    sellerStoreRepository.addProducts(
+   return sellerStoreRepository.addProducts(
       name: name,
       price: price,
       description: description,

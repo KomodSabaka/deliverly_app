@@ -5,7 +5,7 @@ import 'package:deliverly_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/firebase_fields.dart';
 
 final authRepository = Provider((ref) => AuthRepository(
       firebaseAuth: FirebaseAuth.instance,

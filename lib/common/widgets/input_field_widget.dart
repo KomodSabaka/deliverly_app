@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../utils/constants.dart';
+import '../constants/app_palette.dart';
 
 class InputFieldWidget extends StatelessWidget {
   final String hintText;
@@ -29,7 +29,7 @@ class InputFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       style: Theme.of(context).textTheme.bodyLarge,
-      cursorColor: secondaryTextColor,
+      cursorColor: AppPalette.secondaryTextColor,
       controller: controller,
       keyboardType: keyboardType,
       maxLength: maxLength,
@@ -40,8 +40,8 @@ class InputFieldWidget extends StatelessWidget {
         FilteringTextInputFormatter.singleLineFormatter,
       ],
       decoration: InputDecoration(
-        focusColor: borderColor,
-        fillColor: borderColor,
+        focusColor: AppPalette.borderColor,
+        fillColor: AppPalette.borderColor,
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodyLarge,
         counterText: '',
@@ -49,22 +49,22 @@ class InputFieldWidget extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(27),
             borderSide: const BorderSide(
-              color: borderColor,
+              color: AppPalette.borderColor,
             )),
         disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(27),
             borderSide: const BorderSide(
-              color: borderColor,
+              color: AppPalette.borderColor,
             )),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(27),
             borderSide: const BorderSide(
-              color: borderColor,
+              color: AppPalette.borderColor,
             )),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(27),
             borderSide: const BorderSide(
-              color: borderColor,
+              color: AppPalette.borderColor,
             )),
       ),
     );

@@ -2,7 +2,7 @@ import 'package:deliverly_app/common/app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 
 class CardProductWidget extends ConsumerStatefulWidget {
   final String image;
@@ -27,7 +27,7 @@ class _CardProductWidgetState extends ConsumerState<CardProductWidget> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
-          color: borderColor,
+          color: AppPalette.borderColor,
         ),
       ),
       child: Column(

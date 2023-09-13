@@ -1,12 +1,10 @@
 import 'dart:async';
-
-import 'package:deliverly_app/common/app_settings/app_settings.dart';
 import 'package:deliverly_app/common/navigation/routes.dart';
 import 'package:deliverly_app/common/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -20,8 +18,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     await checkInternetConnection().then(
       (hasInternetConnection) async {
         if (hasInternetConnection == true) {
-          await ref.read(appSettingsProvider.notifier).getCurrentExchangeRate();
-          print(ref.read(appSettingsProvider).currentExchangeRate);
+          // await ref.read(appSettingsProvider.notifier).getCurrentExchangeRate();
+          // print(ref.read(appSettingsProvider).currentExchangeRate);
           timer.cancel();
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -34,20 +32,10 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   }
 
   @override
-  void didChangeDependencies() async {
-
-
-    super.didChangeDependencies();
-  }
-
-
-
-  @override
   void initState() {
     Timer.periodic(const Duration(seconds: 2), (timer) async {
       if (mounted) {
         await initData(timer);
-
       }
     });
     super.initState();
@@ -71,7 +59,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
             end: Alignment.bottomLeft,
             colors: [
               Colors.green[300]!,
-              backgroundColorSelectModePage,
+              AppPalette.backgroundColorSelectModePage,
               Colors.green[200]!,
             ],
           ),

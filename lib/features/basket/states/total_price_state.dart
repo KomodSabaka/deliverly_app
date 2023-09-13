@@ -1,5 +1,5 @@
 import 'package:deliverly_app/common/app_settings/app_settings.dart';
-import 'package:deliverly_app/features/basket/repository/basket_state.dart';
+import 'package:deliverly_app/features/basket/states/basket_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final totalPriceProvider = StateNotifierProvider<TotalPriceNotifier, double>(

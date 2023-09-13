@@ -1,5 +1,3 @@
-import 'package:deliverly_app/common/app_settings/app_settings.dart';
-import 'package:deliverly_app/common/enums/mode_enum.dart';
 import 'package:deliverly_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

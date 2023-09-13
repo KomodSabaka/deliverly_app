@@ -3,7 +3,7 @@ import 'package:deliverly_app/features/showcase/controllers/showcase_controller.
 import 'package:deliverly_app/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/back_arrow_widget.dart';
 import '../../../common/widgets/input_field_widget.dart';
@@ -32,12 +32,15 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
 
   Future<void> selectImage() async {
     var pickedImage = await pickImage(context);
+
     if (pickedImage != null) {
       setState(() {
         image = pickedImage;
       });
     }
   }
+
+
 
   void _saveProduct() {
     if (widget.isRefactoring == false && image == null) {
@@ -53,7 +56,7 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
         ref.read(showCaseController).refactorProduct(
               product: widget.product!,
               name: _nameController.text,
-              price:  double.parse(_priceController.text),
+              price: double.parse(_priceController.text),
               description: _descriptionController.text,
               image: image,
             );
@@ -96,7 +99,9 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: BackArrowWidget(onPressed: () => Navigator.pop(context),),
+        leading: BackArrowWidget(
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -117,7 +122,7 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
                     height: 150,
                     width: 150,
                     decoration: BoxDecoration(
-                      border: Border.all(color: borderColor),
+                      border: Border.all(color: AppPalette.borderColor),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: image != null
@@ -147,7 +152,7 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
                         icon: const Icon(
                           Icons.delete,
                           size: 45,
-                          color: primaryButtonColor,
+                          color: AppPalette.primaryButtonColor,
                         ),
                       ),
                       const SizedBox(height: 50),
@@ -156,7 +161,7 @@ class _AddProductPageState extends ConsumerState<CreateProductPage>
                         icon: const Icon(
                           Icons.add,
                           size: 45,
-                          color: primaryButtonColor,
+                          color: AppPalette.primaryButtonColor,
                         ),
                       ),
                     ],

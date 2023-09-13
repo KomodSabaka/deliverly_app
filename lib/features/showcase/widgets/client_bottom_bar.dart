@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_images.dart';
+import '../../../common/constants/app_palette.dart';
 
 
 class ClientBottomBar extends StatelessWidget {
@@ -24,7 +25,7 @@ class ClientBottomBar extends StatelessWidget {
       alignment: Alignment.center,
       width: double.infinity,
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: borderColor)),
+        border: Border(top: BorderSide(color: AppPalette.borderColor)),
       ),
       child: Row(
         children: [
@@ -34,11 +35,11 @@ class ClientBottomBar extends StatelessWidget {
             child: InkWell(
               onTap: () => setIndex(0),
               child: SvgPicture.asset(
-                AppImage.grid,
+                AppImages.grid,
                 fit: BoxFit.none,
                 color: currentIndex == 0
-                    ? selectedBottomIconColor
-                    : secondaryTextColor,
+                    ? AppPalette.selectedBottomIconColor
+                    : AppPalette.secondaryTextColor,
               ),
             ),
           ),
@@ -52,11 +53,11 @@ class ClientBottomBar extends StatelessWidget {
                 alignment: Alignment.bottomLeft,
                 children: [
                   SvgPicture.asset(
-                    AppImage.shoppingCart,
+                    AppImages.shoppingCart,
                     fit: BoxFit.none,
                     color: currentIndex == 1
-                        ? selectedBottomIconColor
-                        : secondaryTextColor,
+                        ? AppPalette.selectedBottomIconColor
+                        : AppPalette.secondaryTextColor,
                   ),
                   basketLength != 0
                       ? Container(
@@ -83,11 +84,11 @@ class ClientBottomBar extends StatelessWidget {
             child: InkWell(
               onTap: () => setIndex(2),
               child: SvgPicture.asset(
-                AppImage.user,
+                AppImages.user,
                 fit: BoxFit.none,
                 color: currentIndex == 2
-                    ? selectedBottomIconColor
-                    : secondaryTextColor,
+                    ? AppPalette.selectedBottomIconColor
+                    : AppPalette.secondaryTextColor,
               ),
             ),
           ),

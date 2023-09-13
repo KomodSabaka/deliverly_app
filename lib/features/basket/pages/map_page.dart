@@ -20,8 +20,8 @@ class MapPage extends ConsumerStatefulWidget {
 
 class _MapPageState extends ConsumerState<MapPage> {
   void _getCurrentLocation() async {
-   await ref.read(mapRepositoryProvider.notifier).getCurrentLocation();
-   widget.addressController.text = ref.read(mapRepositoryProvider).address;
+    await ref.read(mapRepositoryProvider.notifier).getCurrentLocation();
+    widget.addressController.text = ref.read(mapRepositoryProvider).address;
   }
 
   void _setMarker({required LatLng latLng}) async {
@@ -60,6 +60,17 @@ class _MapPageState extends ConsumerState<MapPage> {
                 MarkerLayer(
                   markers: ref.watch(mapRepositoryProvider).markers,
                 ),
+                if (ref.watch(mapRepositoryProvider).markers.isNotEmpty)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 36.0),
+                      child: ElevatedButton(
+                        onPressed:() => Navigator.of(context).pop(),
+                        child: const Text('Select'),
+                      ),
+                    ),
+                  ),
               ],
             ),
     );

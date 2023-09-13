@@ -1,5 +1,4 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:deliverly_app/models/date_and_time.dart';
 import 'package:flutter/material.dart';
 
 class NotificationService {

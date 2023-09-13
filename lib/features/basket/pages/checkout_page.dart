@@ -1,6 +1,9 @@
+import 'package:deliverly_app/common/app_settings/app_settings.dart';
 import 'package:deliverly_app/common/widgets/input_field_widget.dart';
 import 'package:deliverly_app/features/basket/repository/checkout_repository.dart';
 import 'package:deliverly_app/features/basket/widgets/input_field_with_button.dart';
+import 'package:deliverly_app/models/address.dart';
+import 'package:deliverly_app/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -21,13 +24,16 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   late TextEditingController _addressController;
   late TextEditingController _entranceController;
   late TextEditingController _apartmentController;
+  DateTime? deliveryDate;
 
   void _selectTime() async {
     var time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
     );
-    if (time != null) _timeController.text = time.format(context);
+    if (time != null) {
+      _timeController.text = time.format(context);
+    }
   }
 
   void _selectDate() async {
@@ -39,6 +45,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     );
     if (date != null) {
       _dateController.text = DateFormat('dd-MM-yyyy').format(date);
+      setState(() {
+        deliveryDate = date;
+      });
     }
   }
 
@@ -47,6 +56,34 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
           context: context,
           addressController: _addressController,
         );
+  }
+
+  void _buyProducts() {
+    ref.read(checkoutRepositoryProvider).buyProducts(
+        deliveryDate: deliveryDate!,
+        deliveryTime: _timeController.text,
+        address: Address(
+          street: _addressController.text,
+          entrance: _entranceController.text,
+          apartment: _apartmentController.text,
+        ));
+    Navigator.of(context).pop();
+  }
+
+  void initAddress() {
+    var user = ref.watch(appSettingsProvider).user as Client;
+    if(user.address != null) {
+      _addressController.text = user.address!.street;
+      _entranceController.text = user.address!.entrance;
+      _apartmentController.text = user.address!.apartment;
+    }
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    initAddress();
+    super.didChangeDependencies();
   }
 
   @override
@@ -102,10 +139,10 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SizedBox(
-                  width: size.width * 0.45,
+                  width: size.width * 0.35,
                   child: InputFieldWidget(
                     controller: _entranceController,
                     hintText: 'Enter entrance',
@@ -113,7 +150,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                   ),
                 ),
                 SizedBox(
-                  width: size.width * 0.45,
+                  width: size.width * 0.35,
                   child: InputFieldWidget(
                     controller: _apartmentController,
                     hintText: 'Enter apartment',
@@ -129,7 +166,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                 child: SizedBox.fromSize(
                   size: Size(size.width * 0.9, size.height * 0.07),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _buyProducts,
                     child: Text(S.of(context).pay),
                   ),
                 ),

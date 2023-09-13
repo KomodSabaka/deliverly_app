@@ -7,25 +7,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/firebase_fields.dart';
 import '../../../common/utils/utils.dart';
+import '../states/showcase_state.dart';
 
 final sellerStoreRepository = Provider((ref) => SellerStoreRepository(
       firebaseAuth: FirebaseAuth.instance,
       firebaseFirestore: FirebaseFirestore.instance,
+      ref: ref,
     ));
 
 class SellerStoreRepository extends StoreRepository {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
+  final ProviderRef ref;
 
   SellerStoreRepository({
     required this.firebaseAuth,
     required this.firebaseFirestore,
+    required this.ref,
   });
 
-  void addProducts({
+  Future<void> addProducts({
     required String name,
     required double price,
     required String description,
@@ -104,19 +107,19 @@ class SellerStoreRepository extends StoreRepository {
   }
 
   @override
-  Stream<List<Product>> searchProduct({
+  Future<void> searchProduct({
     required String text,
-  }) {
+  }) async {
     String companyId = firebaseAuth.currentUser!.uid;
-    return firebaseFirestore
+    var productsData =  await firebaseFirestore
         .collection(FirebaseFields.products)
-        .where(FirebaseFields.sellerId, isEqualTo: companyId)
-        .snapshots()
-        .map((event) {
-      List<Product> products = [];
-      for (var product in event.docs) {
-        products.add(Product.fromMap(product.data()));
-      }
+        .where(FirebaseFields.sellerId, isEqualTo: companyId).get();
+
+    List<Product> products = [];
+    for (var product in productsData.docs) {
+      products.add(Product.fromMap(product.data()));
+
+
       List<Product> foundProducts = [];
       if (text.isNotEmpty) {
         foundProducts = products
@@ -124,27 +127,24 @@ class SellerStoreRepository extends StoreRepository {
                 element.name.toLowerCase().contains(text.toLowerCase()))
             .toList();
       }
-      return foundProducts;
-    });
+     ref.watch(showCaseState.notifier).addProduct(products: foundProducts);
+    }
   }
 
-
   @override
-  Stream<List<Product>> getProducts() {
+  Future<void> getProducts() async {
     String companyId = firebaseAuth.currentUser!.uid;
-    return firebaseFirestore
+    var productsData = await firebaseFirestore
         .collection(FirebaseFields.products)
         .where(FirebaseFields.sellerId, isEqualTo: companyId)
-        .snapshots()
-        .map(
-      (event) {
-        List<Product> products = [];
-        for (var product in event.docs) {
-          products.add(Product.fromMap(product.data()));
-        }
-        return products;
-      },
-    );
+        .get();
+
+    List<Product> products = [];
+    for (var product in productsData.docs) {
+      products.add(Product.fromMap(product.data()));
+    }
+
+    ref.read(showCaseState.notifier).addProduct(products: products);
   }
 
   Stream<Product> currentProduct({

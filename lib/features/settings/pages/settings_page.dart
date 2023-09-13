@@ -3,7 +3,7 @@ import 'package:deliverly_app/common/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 import '../../../generated/l10n.dart';
 
 class SettingPage extends ConsumerStatefulWidget {
@@ -45,7 +45,7 @@ class _SellerSettingPageState extends ConsumerState<SettingPage> {
                     isClientMode
                         ? Icons.account_circle
                         : Icons.account_balance_sharp,
-                    color: primaryTextColor,
+                    color: AppPalette.primaryTextColor,
                   ),
                   const SizedBox(width: 8),
                   Flexible(
@@ -71,7 +71,7 @@ class _SellerSettingPageState extends ConsumerState<SettingPage> {
                       children: [
                         const Icon(
                           Icons.history,
-                          color: primaryTextColor,
+                          color: AppPalette.primaryTextColor,
                         ),
                         const SizedBox(width: 8),
                         Text(

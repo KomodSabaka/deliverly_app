@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import '../utils/constants.dart';
+import '../constants/app_palette.dart';
 
 class AppTheme {
   static ThemeData get theme {
     return ThemeData(
-      scaffoldBackgroundColor: backdropColor,
+      scaffoldBackgroundColor:AppPalette.backdropColor,
       textTheme: const TextTheme(
         titleLarge: TextStyle(
           fontWeight: FontWeight.bold,
-          color: primaryTextColor,
+          color: AppPalette.primaryTextColor,
           fontSize: 34,
           letterSpacing: 0.41,
         ),
         bodyLarge: TextStyle(
-          color: secondaryTextColor,
+          color: AppPalette.secondaryTextColor,
           fontSize: 17,
           letterSpacing: -0.41,
         ),
         bodyMedium: TextStyle(
-          color: primaryTextColor,
+          color: AppPalette.primaryTextColor,
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
@@ -30,7 +30,7 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           splashFactory: NoSplash.splashFactory,
-          foregroundColor: primaryTextColor,
+          foregroundColor: AppPalette.primaryTextColor,
           textStyle: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -39,7 +39,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryButtonColor,
+          backgroundColor: AppPalette.primaryButtonColor,
           textStyle: const TextStyle(
             fontSize: 15,
             letterSpacing: -0.01,

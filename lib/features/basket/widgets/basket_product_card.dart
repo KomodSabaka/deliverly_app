@@ -1,5 +1,4 @@
 import 'package:deliverly_app/common/app_settings/app_settings.dart';
-import 'package:deliverly_app/common/utils/utils.dart';
 import 'package:deliverly_app/models/item_in_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_images.dart';
+import '../../../common/constants/app_palette.dart';
 
 class SellerBottomBar extends StatefulWidget {
   final int currentIndex;
@@ -26,7 +27,7 @@ class _SellerBottomBarState extends State<SellerBottomBar> {
       width: double.infinity,
       decoration: const BoxDecoration(
         border: Border(
-          top: BorderSide(color: borderColor),
+          top: BorderSide(color: AppPalette.borderColor),
         ),
       ),
       child: Row(
@@ -40,11 +41,11 @@ class _SellerBottomBarState extends State<SellerBottomBar> {
                 widget.setIndex(0);
               },
               child: SvgPicture.asset(
-                AppImage.grid,
+                AppImages.grid,
                 fit: BoxFit.none,
                 color: widget.currentIndex == 0
-                    ? selectedBottomIconColor
-                    : secondaryTextColor,
+                    ? AppPalette.selectedBottomIconColor
+                    : AppPalette.secondaryTextColor,
               ),
             ),
           ),
@@ -56,11 +57,11 @@ class _SellerBottomBarState extends State<SellerBottomBar> {
                 widget.setIndex(1);
               },
               child: SvgPicture.asset(
-                AppImage.user,
+                AppImages.user,
                 fit: BoxFit.none,
                 color: widget.currentIndex == 1
-                    ? selectedBottomIconColor
-                    : secondaryTextColor,
+                    ? AppPalette.selectedBottomIconColor
+                    : AppPalette.secondaryTextColor,
               ),
             ),
           ),

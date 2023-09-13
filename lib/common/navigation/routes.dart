@@ -72,7 +72,6 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => ProductPage(
             id: arguments['id'],
-            updateLayout: arguments['updateLayout'],
           ),
         );
       case createProductPage:

@@ -2,12 +2,13 @@ import 'package:deliverly_app/common/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'common/app_settings/app_settings.dart';
-import 'common/utils/constants.dart';
+import 'common/constants/app_palette.dart';
 import 'common/utils/utils.dart';
 import 'features/basket/pages/basket_page.dart';
-import 'features/basket/repository/basket_state.dart';
+import 'features/basket/states/basket_state.dart';
 import 'features/settings/pages/settings_page.dart';
 import 'features/showcase/pages/showcase_page.dart';
+import 'features/showcase/repositores/client_store_repository.dart';
 import 'features/showcase/widgets/client_bottom_bar.dart';
 import 'features/showcase/widgets/seller_bottom_bar.dart';
 import 'generated/l10n.dart';
@@ -53,8 +54,8 @@ class _StoreLayoutState extends ConsumerState<StoreLayout> {
     }
   }
 
-  void _updateLayout() {
-    setState(() {});
+  void _getProducts() {
+    ref.read(clientStoreRepository).getProducts();
   }
 
   @override
@@ -65,6 +66,7 @@ class _StoreLayoutState extends ConsumerState<StoreLayout> {
 
   @override
   void initState() {
+    _getProducts();
     _pageController = PageController();
     super.initState();
   }
@@ -86,7 +88,7 @@ class _StoreLayoutState extends ConsumerState<StoreLayout> {
               setState(() => currentIndex = index);
             },
             children: [
-              ShowcasePage(updateLayout: _updateLayout),
+              const ShowcasePage(),
               isClientMode ? const BasketPage() : const SettingPage(),
               const SettingPage(),
             ],
@@ -106,7 +108,7 @@ class _StoreLayoutState extends ConsumerState<StoreLayout> {
           ? null
           : currentIndex == 0
               ? FloatingActionButton(
-                  backgroundColor: backgroundColorSelectModePage,
+                  backgroundColor: AppPalette.backgroundColorSelectModePage,
                   onPressed: _createProduct,
                   child: const Icon(Icons.add),
                 )

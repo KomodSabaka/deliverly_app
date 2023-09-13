@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 
 
 class AuthBackground extends StatefulWidget {
@@ -43,7 +43,7 @@ class _AuthBackgroundState extends State<AuthBackground>
   Widget build(BuildContext context) {
     _controller.forward();
     return Scaffold(
-      backgroundColor: backgroundColorSelectModePage,
+      backgroundColor: AppPalette.backgroundColorSelectModePage,
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -63,7 +63,7 @@ class _AuthBackgroundState extends State<AuthBackground>
                   child: Container(
                     width: double.infinity,
                     decoration: const BoxDecoration(
-                      color: backdropColor,
+                      color: AppPalette.backdropColor,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),

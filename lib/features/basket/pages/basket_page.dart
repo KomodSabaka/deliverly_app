@@ -1,14 +1,13 @@
 import 'package:deliverly_app/common/app_settings/app_settings.dart';
 import 'package:deliverly_app/features/basket/pages/checkout_page.dart';
-import 'package:deliverly_app/features/basket/repository/total_price_state.dart';
-import 'package:deliverly_app/models/date_and_time.dart';
+import 'package:deliverly_app/features/basket/states/total_price_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 import '../../../common/utils/utils.dart';
 import '../../../generated/l10n.dart';
-import '../repository/basket_state.dart';
+import '../states/basket_state.dart';
 import '../widgets/basket_product_card.dart';
 
 class BasketPage extends ConsumerStatefulWidget {
@@ -78,14 +77,14 @@ class _BasketPageState extends ConsumerState<BasketPage> {
                   );
                 },
               ),
-      bottomNavigationBar: ref.watch(totalPriceProvider) == 0.0
+      bottomNavigationBar: ref.watch(basketProvider).isEmpty
           ? null
           : Container(
               height: 50,
               width: double.infinity,
               decoration: const BoxDecoration(
                 border: Border(
-                  top: BorderSide(color: borderColor),
+                  top: BorderSide(color: AppPalette.borderColor),
                 ),
               ),
               child: Row(

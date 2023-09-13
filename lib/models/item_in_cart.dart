@@ -34,8 +34,8 @@ class ItemInCart extends Product {
 
   static ItemInCart fromMap(Map<String, dynamic> map) {
     return ItemInCart(
-      int.parse(map['count'].toString()) ?? 0,
-      double.parse(map['cost'].toString())?? 0.0,
+      int.parse(map['count'].toString()),
+      double.parse(map['cost'].toString()),
       id: map['id'],
       sellerId: map['sellerId'],
       name: map['name'],

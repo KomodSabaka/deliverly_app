@@ -9,7 +9,7 @@ import 'package:deliverly_app/models/pay_card.dart';
 import 'package:deliverly_app/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/back_arrow_widget.dart';
 import '../../../common/widgets/input_field_widget.dart';
@@ -201,7 +201,7 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
                           height: 150,
                           width: 150,
                           decoration: BoxDecoration(
-                            border: Border.all(color: borderColor),
+                            border: Border.all(color: AppPalette.borderColor),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: image != null
@@ -225,7 +225,7 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
                               icon: const Icon(
                                 Icons.delete,
                                 size: 45,
-                                color: primaryButtonColor,
+                                color: AppPalette.primaryButtonColor,
                               ),
                             ),
                             const SizedBox(height: 50),
@@ -234,7 +234,7 @@ class _InfoCompanyPageState extends ConsumerState<InfoPage> {
                               icon: const Icon(
                                 Icons.add,
                                 size: 45,
-                                color: primaryButtonColor,
+                                color: AppPalette.primaryButtonColor,
                               ),
                             ),
                           ],

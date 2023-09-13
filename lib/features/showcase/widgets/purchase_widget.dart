@@ -4,7 +4,7 @@ import 'package:deliverly_app/models/purchase_order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 
 class PurchaseWidget extends StatelessWidget {
   final PurchaseOrder purchase;
@@ -20,7 +20,7 @@ class PurchaseWidget extends StatelessWidget {
       height: 64,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: borderColor,
+        color: AppPalette.borderColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -37,7 +37,7 @@ class PurchaseWidget extends StatelessWidget {
                         width: 60,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(purchase.products[1].image),
+                            image: NetworkImage(purchase.products.first.image),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -47,8 +47,7 @@ class PurchaseWidget extends StatelessWidget {
                             filter: ImageFilter.blur(sigmaX: 3, sigmaY: 4),
                             child: Container(
                               alignment: Alignment.centerRight,
-                              child:
-                                  Text('+${purchase.products.length - 1}'),
+                              child: Text('+${purchase.products.length - 1}'),
                             ),
                           ),
                         ),
@@ -71,16 +70,16 @@ class PurchaseWidget extends StatelessWidget {
             padding: const EdgeInsets.only(top: 32.0),
             child: RichText(
               text: TextSpan(
-                text: DateFormat.Hm().format(purchase.date),
+                text: purchase.deliveryTime,
                 children: [
                   TextSpan(
-                    text: ' ${DateFormat.d().format(purchase.date)}-',
+                    text: ' ${DateFormat.d().format(purchase.deliveryDate)}-',
                   ),
                   TextSpan(
-                    text: '${DateFormat.m().format(purchase.date)}-',
+                    text: '${DateFormat.m().format(purchase.deliveryDate)}-',
                   ),
                   TextSpan(
-                    text: DateFormat.y().format(purchase.date),
+                    text: DateFormat.y().format(purchase.deliveryDate),
                   ),
                 ],
               ),

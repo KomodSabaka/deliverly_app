@@ -1,7 +1,5 @@
-import '../../../models/product.dart';
-
 abstract class StoreRepository {
-  Stream<List<Product>> getProducts();
+  Future<void> getProducts();
 
-  Stream<List<Product>> searchProduct({required String text});
+  Future<void> searchProduct({required String text});
 }

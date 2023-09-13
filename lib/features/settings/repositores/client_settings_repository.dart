@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/firebase_fields.dart';
 import '../../../models/pay_card.dart';
 import '../../../models/purchase_order.dart';
 import '../../../models/user.dart';

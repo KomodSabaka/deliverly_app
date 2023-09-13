@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:deliverly_app/features/settings/repositores/seller_settings_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final sellerSettingsController = Provider<SellerSettingsController>((ref) {
-  return SellerSettingsController(
-    sellerSettingRepository: ref.watch(
-      sellerSettingRepository,
-    ),
-  );
-});
+final sellerSettingsController = Provider<SellerSettingsController>(
+  (ref) => SellerSettingsController(
+    sellerSettingRepository: ref.watch(sellerSettingRepository),
+  ),
+);
 
 class SellerSettingsController {
   final SellerSettingRepository sellerSettingRepository;

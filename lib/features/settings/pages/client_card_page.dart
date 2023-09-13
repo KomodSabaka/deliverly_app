@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/utils/constants.dart';
+import '../../../common/constants/app_palette.dart';
 import '../../../common/widgets/back_arrow_widget.dart';
 import '../../../common/widgets/input_field_widget.dart';
 import '../../../generated/l10n.dart';
@@ -43,7 +43,7 @@ class ClientCardPage extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     width: constraints.maxWidth >= 600 ? 600 : size.width,
                     decoration: BoxDecoration(
-                      border: Border.all(color: borderColor),
+                      border: Border.all(color: AppPalette.borderColor),
                       borderRadius: BorderRadius.circular(10),
                       gradient: const LinearGradient(
                         begin: Alignment.topRight,
