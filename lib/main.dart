@@ -1,4 +1,4 @@
-import 'package:deliverly_app/common/utils/notification.dart';
+import 'package:deliverly_app/common/services/notification.dart';
 import 'package:deliverly_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
